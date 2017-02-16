@@ -19,10 +19,10 @@ import scala.sys.process.ProcessLogger
   * background sentences has the format
   * "[index][tab][background1][tab][background2][tab]...". The output file
   * is in the format of a MCReadingComprehensionInstance with
-  * "[index][tab][passage][tab][question][tab][options][tab][label]".
+  * "[passage][tab][question][tab][options][tab][label]".
   * The background sentences compose the passage in this case.
  */
-class QaBackgroundToMcStep(
+class QaBackgroundToRcStep(
   val params: JValue,
   val fileUtil: FileUtil
 ) extends Step(Some(params), fileUtil) with SentenceProducer {
@@ -67,7 +67,7 @@ class QaBackgroundToMcStep(
       val sentence = fields.drop(1)
       // retrieve the passage corresponding to the index from the map
       val passage = passageMap.getOrElse(index, "")
-      index.toString + "\t" + passage + "\t" + sentence.mkString("\t")
+      passage + "\t" + sentence.mkString("\t")
     })
     fileUtil.writeLinesToFile(outputFile, outputLines)
   }
