@@ -46,7 +46,7 @@ object MemoryNetworkExperiments {
     )
   }
 
-  def intermediateExperiment(
+  def intermediateMcExperiment(
     name: String,
     modelParams: JValue,
     trainingDataset: JValue=ScienceDatasets.intermediateMtfGradeFourAndEightTrainQuestionsWithBuscBackground
@@ -56,6 +56,19 @@ object MemoryNetworkExperiments {
       modelParams,
       trainingDataset,
       ScienceDatasets.intermediateMtfGradeFourAndEightDevQuestionsWithBuscBackground
+    )
+  }
+
+  def intermediateQaExperiment(
+    name: String,
+    modelParams: JValue,
+    trainingDataset: JValue=ScienceDatasets.intermediateQaGradeFourAndEightTrainQuestionsWithBuscBackground
+  ): JValue = {
+    experiment(
+      name,
+      modelParams,
+      trainingDataset,
+      ScienceDatasets.intermediateQaGradeFourAndEightDevQuestionsWithBuscBackground
     )
   }
 
@@ -70,6 +83,16 @@ object MemoryNetworkExperiments {
 
   val multipleChoiceMemoryNetwork: JValue = {
     Models.multipleTrueFalseMemoryNetwork merge
+    Models.betterEntailmentComponents merge
+    //Debug.multipleTrueFalseDefault merge
+    Encoders.gru merge
+    Training.default merge
+    //Training.entailmentPretraining merge
+    (("max_sentence_length" -> 100) ~ ("patience" -> 20))
+  }
+
+  val questionAnswerMemoryNetwork: JValue = {
+    Models.questionAnswerMemoryNetwork merge
     Models.betterEntailmentComponents merge
     //Debug.multipleTrueFalseDefault merge
     Encoders.gru merge
@@ -101,12 +124,16 @@ object MemoryNetworkExperiments {
   }
 
   def runIntermediateMemoryNetworkExperiment() {
-    val baseline = intermediateExperiment(
+    val baselineMtfmn = intermediateMcExperiment(
       "baseline mtfmn",
       multipleChoiceMemoryNetwork
     )
-    val models = Seq(baseline)
-    new Evaluator(Some("baseline_mtfmn_on_intermediate_set_2017_02_15"), models, fileUtil).runPipeline()
+    val baselineQamn = intermediateQaExperiment(
+      "baseline qamn",
+      questionAnswerMemoryNetwork
+    )
+    val models = Seq(baselineMtfmn, baselineQamn)
+    new Evaluator(Some("baseline_mtfmn_vs_qamn_on_intermediate_set_2017_02_17"), models, fileUtil).runPipeline()
   }
 
   def runExperimentWithTurkedQuestions() {
