@@ -36,6 +36,10 @@ object omnibusDaDatasets {
     "question and answer",
     ScienceCorpora.buscElasticSearchIndex(3)
   )
+  val omnibusNDDA04TrainFileWithBackground: JValue =
+    ("sentence producer type" -> "combine background and instance") ~
+    ("sentences" -> omnibusNDDA04TrainFile) ~
+    ("background" -> omnibusNDDA04TrainBuscBackgroundFile)
 
   // Dev Files
   val omnibusNDDA04DevFile = omnibusDaFile(baseDir, "04", "dev")
@@ -45,6 +49,10 @@ object omnibusDaDatasets {
     "question and answer",
     ScienceCorpora.buscElasticSearchIndex(3)
   )
+  val omnibusNDDA04DevFileWithBackground: JValue =
+    ("sentence producer type" -> "combine background and instance") ~
+    ("sentences" -> omnibusNDDA04DevFile) ~
+    ("background" -> omnibusNDDA04DevBuscBackgroundFile)
 
   // Test Files
   val omnibusNDDA04TestFile = omnibusDaFile(baseDir, "04", "test")
@@ -54,4 +62,9 @@ object omnibusDaDatasets {
     "question and answer",
     ScienceCorpora.buscElasticSearchIndex(3)
   )
+  val omnibusNDDA04TestFileWithBackground: JValue =
+    ("sentence producer type" -> "combine background and instance") ~
+    ("sentences" -> omnibusNDDA04TestFile) ~
+    ("background" -> omnibusNDDA04TestBuscBackgroundFile)
+
 }
