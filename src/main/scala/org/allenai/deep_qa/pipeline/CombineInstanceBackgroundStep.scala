@@ -12,22 +12,23 @@ import scala.sys.process.Process
 import scala.sys.process.ProcessLogger
 
 /**
-  * This Step is a SentenceProducer that combines a QuestionAnswerInstance
+  * This Step is a SentenceProducer that combines an Instance
   * with background sentences from a BackgroundCorpusSearcher.
-  * The QuestionAnswerInstance input file has the format
-  * "[index][tab][question][tab][options][tab][label]", and the file with
+  * The Instance input file has the format
+  * "[index][tab][question]...", and the file with
   * background sentences has the format
   * "[index][tab][background1][tab][background2][tab]...". The output file
-  * is in the format of a MCReadingComprehensionInstance with
-  * "[passage][tab][question][tab][options][tab][label]".
-  * The background sentences compose the passage in this case.
+  * simply adds the background sentences to the start of each line.
+  * For example, if the Instance input file has format
+  * [index][tab][question][tab][options], this will output
+  * [background_sentences][tab][question][tab][options].
  */
-class QaBackgroundToRcStep(
+class CombineInstanceBackgroundStep(
   val params: JValue,
   val fileUtil: FileUtil
 ) extends Step(Some(params), fileUtil) with SentenceProducer {
   implicit val formats = DefaultFormats
-  override val name = "QA Background To MC Step"
+  override val name = "Combine Instance and Background Step"
 
   val validParams = baseParams ++ Seq("sentences", "background", "output file")
   JsonHelper.ensureNoExtras(params, name, validParams)

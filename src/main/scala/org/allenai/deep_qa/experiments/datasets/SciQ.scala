@@ -56,7 +56,7 @@ object SciQDatasets {
     ScienceCorpora.buscElasticSearchIndex(3)
   )
   val readingComprehensionTrainWithBuscBackgroundFile: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> mcTrainFile) ~
       ("background" -> mcTrainBuscBackgroundFile)
 
@@ -66,7 +66,7 @@ object SciQDatasets {
     ScienceCorpora.aristoDefaultElasticSearchIndex(3)
   )
   val readingComprehensionTrainWithLuceneBackgroundFile: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> mcTrainFile) ~
       ("background" -> mcTrainLuceneBackgroundFile)
 
@@ -86,7 +86,7 @@ object SciQDatasets {
     ScienceCorpora.buscElasticSearchIndex(3)
   )
   val readingComprehensionDevWithBuscBackgroundFile: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> mcDevFile) ~
       ("background" -> mcDevBuscBackgroundFile)
 
@@ -96,7 +96,7 @@ object SciQDatasets {
     ScienceCorpora.aristoDefaultElasticSearchIndex(3)
   )
   val readingComprehensionDevWithLuceneBackgroundFile: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> mcDevFile) ~
       ("background" -> mcDevLuceneBackgroundFile)
 
@@ -115,7 +115,7 @@ object SciQDatasets {
     ScienceCorpora.buscElasticSearchIndex(3)
   )
   val readingComprehensionTestWithBuscBackgroundFile: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> mcTestFile) ~
       ("background" -> mcTestBuscBackgroundFile)
 
@@ -125,7 +125,7 @@ object SciQDatasets {
     ScienceCorpora.aristoDefaultElasticSearchIndex(3)
   )
   val readingComprehensionTestWithLuceneBackgroundFile: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> mcTestFile) ~
       ("background" -> mcTestLuceneBackgroundFile)
 
