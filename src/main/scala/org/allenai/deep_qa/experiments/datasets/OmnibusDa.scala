@@ -7,9 +7,15 @@ import org.json4s.JsonDSL._
  * This object contains a bunch of JValue specifications for the
  * Omnibus DA dataset's data files.
  */
-object omnibusDaDatasets {
+object omnibusDa {
 
   def omnibusDaFile(omnibusDaDir: String, grade: String, split: String): JValue = {
+    if (grade.length == 1) {
+      val grade_str = "0" + grade
+    }
+    else{
+      val grade_str = grade
+    }
     val datasetGradePath = s"Omnibus-Gr${grade}-NDDA"
     val outputDirectory = omnibusDaDir + datasetGradePath +s"/processed/${split}/"
     val splitCapitalized = split.capitalize
@@ -29,42 +35,41 @@ object omnibusDaDatasets {
 
   val baseDir = "/efs/data/dlfa/omnibus_ndda/"
   // Train files
-  val omnibusNDDA04TrainFile = omnibusDaFile(baseDir, "04", "train")
-  val omnibusNDDA04Train = omnibusDaDataset(baseDir, "04", "train")
-  val omnibusNDDA04TrainBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
-    omnibusNDDA04TrainFile,
+  val omnibusNDDA4TrainFile = omnibusDaFile(baseDir, "4", "train")
+  val omnibusNDDA4Train = omnibusDaDataset(baseDir, "4", "train")
+  val omnibusNDDA4TrainBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
+    omnibusNDDA4TrainFile,
     "question and answer",
     ScienceCorpora.buscElasticSearchIndex(3)
   )
-  val omnibusNDDA04TrainFileWithBackground: JValue =
+  val omnibusNDDA4TrainFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
-    ("sentences" -> omnibusNDDA04TrainFile) ~
-    ("background" -> omnibusNDDA04TrainBuscBackgroundFile)
+    ("sentences" -> omnibusNDDA4TrainFile) ~
+    ("background" -> omnibusNDDA4TrainBuscBackgroundFile)
 
   // Dev Files
-  val omnibusNDDA04DevFile = omnibusDaFile(baseDir, "04", "dev")
-  val omnibusNDDA04Dev = omnibusDaDataset(baseDir, "04", "dev")
-  val omnibusNDDA04DevBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
-    omnibusNDDA04DevFile,
+  val omnibusNDDA4DevFile = omnibusDaFile(baseDir, "4", "dev")
+  val omnibusNDDA4Dev = omnibusDaDataset(baseDir, "4", "dev")
+  val omnibusNDDA4DevBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
+    omnibusNDDA4DevFile,
     "question and answer",
     ScienceCorpora.buscElasticSearchIndex(3)
   )
-  val omnibusNDDA04DevFileWithBackground: JValue =
+  val omnibusNDDA4DevFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
-    ("sentences" -> omnibusNDDA04DevFile) ~
-    ("background" -> omnibusNDDA04DevBuscBackgroundFile)
+    ("sentences" -> omnibusNDDA4DevFile) ~
+    ("background" -> omnibusNDDA4DevBuscBackgroundFile)
 
   // Test Files
-  val omnibusNDDA04TestFile = omnibusDaFile(baseDir, "04", "test")
-  val omnibusNDDA04Test = omnibusDaDataset(baseDir, "04", "test")
-  val omnibusNDDA04TestBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
-    omnibusNDDA04TestFile,
+  val omnibusNDDA4TestFile = omnibusDaFile(baseDir, "4", "test")
+  val omnibusNDDA4Test = omnibusDaDataset(baseDir, "4", "test")
+  val omnibusNDDA4TestBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
+    omnibusNDDA4TestFile,
     "question and answer",
     ScienceCorpora.buscElasticSearchIndex(3)
   )
-  val omnibusNDDA04TestFileWithBackground: JValue =
+  val omnibusNDDA4TestFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
-    ("sentences" -> omnibusNDDA04TestFile) ~
-    ("background" -> omnibusNDDA04TestBuscBackgroundFile)
-
+    ("sentences" -> omnibusNDDA4TestFile) ~
+    ("background" -> omnibusNDDA4TestBuscBackgroundFile)
 }
