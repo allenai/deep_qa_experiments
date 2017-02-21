@@ -121,7 +121,7 @@ case class SpanPredictionInstance(
 
 /**
   * An Instance representing a direct answer question, where the label
-  * is the string answer to the question.
+  * is a string containing possible acceptable answers for the question.
   */
 case class DirectAnswerInstance(
   question: String,
