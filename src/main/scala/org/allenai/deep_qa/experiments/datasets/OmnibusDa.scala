@@ -7,7 +7,7 @@ import org.json4s.JsonDSL._
  * This object contains a bunch of JValue specifications for the
  * Omnibus DA dataset's data files.
  */
-object omnibusDa {
+object OmnibusDa {
 
   def omnibusDaFile(omnibusDaDir: String, grade: String, split: String): JValue = {
     if (grade.length == 1) {
