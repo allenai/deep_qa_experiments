@@ -120,6 +120,22 @@ case class SpanPredictionInstance(
 }
 
 /**
+  * An Instance representing a direct answer question, where the label
+  * is a string containing possible acceptable answers for the question.
+  */
+case class DirectAnswerInstance(
+  question: String,
+  override val label: Option[String]
+) extends Instance {
+  def asStrings(): Seq[Seq[String]] = {
+    label match {
+      case Some(l) => Seq(Seq(s"$question\t$l"))
+      case None => Seq(Seq(s"$question"))
+    }
+  }
+}
+
+/**
   * An Instance created for the task of multiple choice
   * reading comprehension. Used by the SciQ dataset and
   * the Who Did What dataset.

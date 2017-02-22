@@ -197,17 +197,17 @@ object ScienceDatasets {
    */
 
   val omnibusRcGradeFourTrainQuestionsWithBuscBackground: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> ScienceFiles.omnibusGradeFourTrainSentences_questionAndAnswer) ~
       ("background" -> omnibusQaGradeFourTrainBuscBackgroundFile)
 
   val omnibusRcGradeFourDevQuestionsWithBuscBackground: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> ScienceFiles.omnibusGradeFourDevSentences_questionAndAnswer) ~
       ("background" -> omnibusQaGradeFourDevBuscBackgroundFile)
 
   val omnibusRcGradeFourTestQuestionsWithBuscBackground: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> ScienceFiles.omnibusGradeFourTestSentences_questionAndAnswer) ~
       ("background" -> omnibusQaGradeFourTestBuscBackgroundFile)
 
@@ -272,17 +272,17 @@ object ScienceDatasets {
    */
 
   val omnibusRcGradeEightTrainQuestionsWithBuscBackground: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> ScienceFiles.omnibusGradeEightTrainSentences_questionAndAnswer) ~
       ("background" -> omnibusQaGradeEightTrainBuscBackgroundFile)
 
   val omnibusRcGradeEightDevQuestionsWithBuscBackground: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> ScienceFiles.omnibusGradeEightDevSentences_questionAndAnswer) ~
       ("background" -> omnibusQaGradeEightDevBuscBackgroundFile)
 
   val omnibusRcGradeEightTestQuestionsWithBuscBackground: JValue =
-    ("sentence producer type" -> "qa and background to rc") ~
+    ("sentence producer type" -> "combine background and instance") ~
       ("sentences" -> ScienceFiles.omnibusGradeEightTestSentences_questionAndAnswer) ~
       ("background" -> omnibusQaGradeEightTestBuscBackgroundFile)
 

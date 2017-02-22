@@ -35,4 +35,5 @@ object DatasetReader {
   readers.put("who did what", (fileUtil) => new WhoDidWhatDatasetReader(fileUtil))
   readers.put("newsqa", (fileUtil) => new NewsQaDatasetReader(fileUtil))
   readers.put("sciq", (fileUtil) => new SciQDatasetReader(fileUtil))
+  readers.put("omnibus da", (fileUtil) => new OmnibusDaDatasetReader())
 }
