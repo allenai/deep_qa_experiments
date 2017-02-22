@@ -14,7 +14,7 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
     """"examName","examGrade","examYear","notes","tags","legacyId",""" +
     """importedQuestionId"""
 
-  val row1 = """"1",,"false","""" + s"${questionText1}" + """","""" + s"${answerText1}" + """",""" +
+  val row1 = s""""1",,"false","${questionText1}","${answerText1}",""" +
     """"1","false","false","false","Source1","5","2015","","Tag1",""" +
     """"legacyId1","importedId1""""
 
@@ -22,7 +22,7 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
     "make electricity and heat buildings. Explain how long it would most likely take for new coal " +
     "to form."
   val answerText2 = "Coal may slowly form over millions of years."
-  val row2 = """"1",,"false","""" + s"${questionText2}"+"""","""" + s"${answerText2}" + """",""" +
+  val row2 = s""""1",,"false","${questionText2}","${answerText2}",""" +
     """"1","false","false","false","Source2","5","2015","","Tag2",""" +
     """"legacyId2","importedId2""""
 
