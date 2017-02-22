@@ -14,8 +14,9 @@ import org.json4s.native.JsonMethods.parse
  * evaluation framework.
  */
 
-class OmnibusDaDatasetReader(fileUtil: FileUtil) extends DatasetReader[DirectAnswerInstance] {
+class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
   override def readFile(filename: String): Dataset[DirectAnswerInstance] = {
+    val fileUtil = new FileUtil
     val reader = new StringReader(fileUtil.readFileContents(filename))
     val csv = new CSVReader(reader)
     val instanceTuples = for {

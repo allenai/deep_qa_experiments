@@ -32,7 +32,7 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
       |${row1}
       |${row2}""".stripMargin
 
-  val reader = new OmnibusDaDatasetReader(fileUtil)
+  val reader = new OmnibusDaDatasetReader()
   "readFile" should "return a correct dataset" in {
     fileUtil.mkdirsForFile(datasetFile)
     fileUtil.writeContentsToFile(datasetFile, datasetFileContents)
