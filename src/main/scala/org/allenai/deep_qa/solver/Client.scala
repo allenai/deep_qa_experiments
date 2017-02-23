@@ -32,32 +32,14 @@ import org.json4s.native.JsonMethods.{parse,pretty,render}
  * thing we do here is convert between an Instance object and an Instance proto, then send the
  * proto off to the server, returning the scores we get back.
  */
-class Client(serverDirectory: File, modelParams: JValue) extends LazyLogging {
-  val host = "localhost"
-  val port = 50051
-
-  val serverStartTime = 10000
+class Client(host: String, port: Int) extends LazyLogging {
   val fileUtil = new FileUtil
-  val params: JValue = ("server" -> ("port" -> port)) ~ ("solver" -> modelParams)
-  val modelParamFile = serverDirectory.getAbsolutePath() + "/tmp_model_param_file.json"
-  logger.info("Writing model params to disk")
-  fileUtil.writeContentsToFile(modelParamFile, pretty(render(params)))
-  logger.info("Starting the server process")
-  val serverScript = "src/main/python/server.py"
-  val serverProcess = Process(s"""python ${serverScript} ${modelParamFile}""", serverDirectory).run
-  logger.info(s"Sleeping ${serverStartTime / 1000.0} seconds to give the server time to boot")
-  Thread.sleep(serverStartTime)  // we'll give the server a bit of time to boot up before trying to connect.
-  logger.info("Connecting to the server")
   val channel = OkHttpChannelBuilder.forAddress(host, port).usePlaintext(true).build
   val blockingStub = SolverServiceGrpc.blockingStub(channel)
 
   def shutdown(): Unit = {
     logger.info("Closing connection to the server")
     channel.shutdown.awaitTermination(5, TimeUnit.SECONDS)
-    logger.info("Shutting down the server")
-    serverProcess.destroy()
-    logger.info("Deleting model param file")
-    fileUtil.deleteFile(modelParamFile)
   }
 
   def answerQuestion(instance: Instance): Seq[Double] = {
@@ -73,7 +55,16 @@ class Client(serverDirectory: File, modelParams: JValue) extends LazyLogging {
         val questionText = containedMessage.question
         val answerOptions = containedMessage.answerOptions
         val background = i.background
-        MessageInstance(instanceType, questionText, answerOptions, background, Seq())
+        val backgroundInstances = background.map(sentence => {
+          MessageInstance(
+            InstanceType.TRUE_FALSE,
+            sentence,
+            Seq(),
+            Seq(),
+            Seq()
+          )
+        })
+        MessageInstance(instanceType, questionText, answerOptions, backgroundInstances, Seq())
       }
       case i: QuestionAnswerInstance => {
         val instanceType = InstanceType.QUESTION_ANSWER
@@ -108,15 +99,7 @@ class Client(serverDirectory: File, modelParams: JValue) extends LazyLogging {
 object Client {
 
   def main(args: Array[String]) {
-    if (args.length != 1) {
-      println("USAGE: Client.scala [model_param_file]")
-      System.exit(-1)
-    }
-    val fileUtil = new FileUtil
-    val paramFile = args(0)
-    val modelParams = parse(fileUtil.readFileContents(paramFile))
-
-    val client: Client = new Client(new File("./"), modelParams)
+    val client: Client = new Client("localhost", 50051)
 
     val instance = MultipleTrueFalseInstance(Seq(
       BackgroundInstance(TrueFalseInstance("statement 1", None), Seq("background 1")),
