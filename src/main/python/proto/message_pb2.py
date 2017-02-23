@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='message.proto',
   package='deep_qa',
   syntax='proto3',
-  serialized_pb=_b('\n\rmessage.proto\x12\x07\x64\x65\x65p_qa\"\x9d\x01\n\x08Instance\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.InstanceType\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x16\n\x0e\x61nswer_options\x18\x03 \x03(\t\x12\x12\n\nbackground\x18\x04 \x03(\t\x12.\n\x13\x63ontained_instances\x18\x05 \x03(\x0b\x32\x11.deep_qa.Instance\"6\n\x0fQuestionRequest\x12#\n\x08question\x18\x01 \x01(\x0b\x32\x11.deep_qa.Instance\"\"\n\x10QuestionResponse\x12\x0e\n\x06scores\x18\x01 \x03(\x01*[\n\x0cInstanceType\x12\r\n\tUNDEFINED\x10\x00\x12\x0e\n\nTRUE_FALSE\x10\x01\x12\x17\n\x13MULTIPLE_TRUE_FALSE\x10\x02\x12\x13\n\x0fQUESTION_ANSWER\x10\x03\x32X\n\rSolverService\x12G\n\x0e\x41nswerQuestion\x12\x18.deep_qa.QuestionRequest\x1a\x19.deep_qa.QuestionResponse\"\x00\x42\x15\n\x13org.allenai.deep_qab\x06proto3')
+  serialized_pb=_b('\n\rmessage.proto\x12\x07\x64\x65\x65p_qa\"\xba\x01\n\x08Instance\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.InstanceType\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x16\n\x0e\x61nswer_options\x18\x03 \x03(\t\x12/\n\x14\x62\x61\x63kground_instances\x18\x04 \x03(\x0b\x32\x11.deep_qa.Instance\x12.\n\x13\x63ontained_instances\x18\x05 \x03(\x0b\x32\x11.deep_qa.Instance\"6\n\x0fQuestionRequest\x12#\n\x08question\x18\x01 \x01(\x0b\x32\x11.deep_qa.Instance\"\"\n\x10QuestionResponse\x12\x0e\n\x06scores\x18\x01 \x03(\x01*[\n\x0cInstanceType\x12\r\n\tUNDEFINED\x10\x00\x12\x0e\n\nTRUE_FALSE\x10\x01\x12\x17\n\x13MULTIPLE_TRUE_FALSE\x10\x02\x12\x13\n\x0fQUESTION_ANSWER\x10\x03\x32X\n\rSolverService\x12G\n\x0e\x41nswerQuestion\x12\x18.deep_qa.QuestionRequest\x1a\x19.deep_qa.QuestionResponse\"\x00\x42\x15\n\x13org.allenai.deep_qab\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -49,8 +49,8 @@ _INSTANCETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=278,
-  serialized_end=369,
+  serialized_start=307,
+  serialized_end=398,
 )
 _sym_db.RegisterEnumDescriptor(_INSTANCETYPE)
 
@@ -91,8 +91,8 @@ _INSTANCE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='background', full_name='deep_qa.Instance.background', index=3,
-      number=4, type=9, cpp_type=9, label=3,
+      name='background_instances', full_name='deep_qa.Instance.background_instances', index=3,
+      number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -117,7 +117,7 @@ _INSTANCE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=27,
-  serialized_end=184,
+  serialized_end=213,
 )
 
 
@@ -147,8 +147,8 @@ _QUESTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=186,
-  serialized_end=240,
+  serialized_start=215,
+  serialized_end=269,
 )
 
 
@@ -178,11 +178,12 @@ _QUESTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=242,
-  serialized_end=276,
+  serialized_start=271,
+  serialized_end=305,
 )
 
 _INSTANCE.fields_by_name['type'].enum_type = _INSTANCETYPE
+_INSTANCE.fields_by_name['background_instances'].message_type = _INSTANCE
 _INSTANCE.fields_by_name['contained_instances'].message_type = _INSTANCE
 _QUESTIONREQUEST.fields_by_name['question'].message_type = _INSTANCE
 DESCRIPTOR.message_types_by_name['Instance'] = _INSTANCE
@@ -262,6 +263,11 @@ def add_SolverServiceServicer_to_server(servicer, server):
 
 
 class BetaSolverServiceServicer(object):
+  """The Beta API is deprecated for 0.15.0 and later.
+
+  It is recommended to use the GA API (classes and functions in this
+  file not marked beta) for all further purposes. This class was generated
+  only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
   """The service definition
   """
   def AnswerQuestion(self, request, context):
@@ -269,6 +275,11 @@ class BetaSolverServiceServicer(object):
 
 
 class BetaSolverServiceStub(object):
+  """The Beta API is deprecated for 0.15.0 and later.
+
+  It is recommended to use the GA API (classes and functions in this
+  file not marked beta) for all further purposes. This class was generated
+  only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
   """The service definition
   """
   def AnswerQuestion(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
@@ -277,6 +288,11 @@ class BetaSolverServiceStub(object):
 
 
 def beta_create_SolverService_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
+  """The Beta API is deprecated for 0.15.0 and later.
+
+  It is recommended to use the GA API (classes and functions in this
+  file not marked beta) for all further purposes. This function was
+  generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
   request_deserializers = {
     ('deep_qa.SolverService', 'AnswerQuestion'): QuestionRequest.FromString,
   }
@@ -291,6 +307,11 @@ def beta_create_SolverService_server(servicer, pool=None, pool_size=None, defaul
 
 
 def beta_create_SolverService_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
+  """The Beta API is deprecated for 0.15.0 and later.
+
+  It is recommended to use the GA API (classes and functions in this
+  file not marked beta) for all further purposes. This function was
+  generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
   request_serializers = {
     ('deep_qa.SolverService', 'AnswerQuestion'): QuestionRequest.SerializeToString,
   }

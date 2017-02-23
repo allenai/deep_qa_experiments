@@ -14,6 +14,8 @@ random.seed(13370)
 numpy.random.seed(1337)  # pylint: disable=no-member
 
 # pylint: disable=wrong-import-position
+from keras import backend as K
+
 from deep_qa.common.checks import ensure_pythonhashseed_set
 from deep_qa.common.params import get_choice
 from deep_qa.models import concrete_models
@@ -30,13 +32,23 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class SolverServer(message_pb2.SolverServiceServicer):
     def __init__(self, solver):
         self.solver = solver
-        self.solver.load_model()
+        if K.backend() == "tensorflow":
+            import tensorflow
+            self.graph = tensorflow.get_default_graph()
+            with self.graph.as_default():
+                self.solver.load_model()
+        else:
+            self.solver.load_model()
 
     # The name of this method is specified in message.proto.
     def AnswerQuestion(self, request, context):
         instance = self.read_instance_message(request.question)
         try:
-            scores = self.solver.score_instance(instance)
+            if K.backend() == "tensorflow":
+                with self.graph.as_default():
+                    scores = self.solver.score_instance(instance)
+            else:
+                scores = self.solver.score_instance(instance)
         except:
             print("Instance was: " + str(instance))
             raise
@@ -62,23 +74,21 @@ class SolverServer(message_pb2.SolverServiceServicer):
             instance = QuestionAnswerInstance(question, options, None, None)
         else:
             raise RuntimeError("Unrecognized instance type: " + instance_type)
-        if instance_message.background:
-            background = instance_message.background
-            instance = BackgroundInstance(instance, background)
+        if instance_message.background_instances:
+            background = instance_message.background_instances
+            background_instances = [self.read_instance_message(instance) for instance in background]
+            instance = BackgroundInstance(instance, background_instances)
         return instance
 
 
-def serve(config_file: str):
+def serve(port: int, config_file: str):
     # read in the Typesafe-style config file and lookup the port to run on.
-    params = ConfigFactory.parse_file(config_file)
-    server_params = params['server']
-    port = server_params['port']
+    solver_params = ConfigFactory.parse_file(config_file)
 
     # create the server and add our RPC "servicer" to it
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
-    solver_params = params['solver']
-    model_type = get_choice(solver_params, 'solver_class', concrete_models.keys())
+    model_type = get_choice(solver_params, 'model_class', concrete_models.keys())
     solver_class = concrete_models[model_type]
     solver = solver_class(solver_params)
     message_pb2.add_SolverServiceServicer_to_server(SolverServer(solver), server)
@@ -96,11 +106,13 @@ def serve(config_file: str):
 
 def main():
     ensure_pythonhashseed_set()
-    if len(sys.argv) != 2:
-        print('USAGE: server.py [config_file]')
+    if len(sys.argv) != 3:
+        print('USAGE: server.py [port] [config_file]')
+        print('RECEIVED: ' + ' '.join(sys.argv))
         sys.exit(-1)
-    config_file = sys.argv[1]
-    serve(config_file)
+    port = int(sys.argv[1])
+    config_file = sys.argv[2]
+    serve(port, config_file)
 
 
 if __name__ == '__main__':
