@@ -118,17 +118,17 @@ object ScienceDatasets {
   val intermediateMtfGradeFourAndEightTrainQuestionsWithBuscBackground: JValue = makeCombinedDataset(Seq(
     intermediateMtfGradeFourTrainQuestionsWithBuscBackground,
     intermediateMtfGradeEightTrainQuestionsWithBuscBackground
-  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_train/")
+  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_train/multiple_tf/append_answer/")
 
   val intermediateMtfGradeFourAndEightDevQuestionsWithBuscBackground: JValue = makeCombinedDataset(Seq(
     intermediateMtfGradeFourDevQuestionsWithBuscBackground,
     intermediateMtfGradeEightDevQuestionsWithBuscBackground
-  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_dev/")
+  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_dev/multiple_tf/append_answer/")
 
   val intermediateMtfGradeFourAndEightTestQuestionsWithBuscBackground: JValue = makeCombinedDataset(Seq(
     intermediateMtfGradeFourTestQuestionsWithBuscBackground,
     intermediateMtfGradeEightTestQuestionsWithBuscBackground
-  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_test/")
+  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_test/multiple_tf/append_answer/")
 
   /////////////////////////////////////////////////////////////////////
   // Diagram Multiple True False
@@ -346,17 +346,17 @@ object ScienceDatasets {
   val intermediateQaGradeFourAndEightTrainQuestionsWithBuscBackground: JValue = makeCombinedDataset(Seq(
     intermediateQaGradeFourTrainQuestionsWithBuscBackground,
     intermediateQaGradeEightTrainQuestionsWithBuscBackground
-  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_train/")
+  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_train/question_and_answer/")
 
   val intermediateQaGradeFourAndEightDevQuestionsWithBuscBackground: JValue = makeCombinedDataset(Seq(
     intermediateQaGradeFourDevQuestionsWithBuscBackground,
     intermediateQaGradeEightDevQuestionsWithBuscBackground
-  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_dev/")
+  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_dev/question_and_answer/")
 
   val intermediateQaGradeFourAndEightTestQuestionsWithBuscBackground: JValue = makeCombinedDataset(Seq(
     intermediateQaGradeFourTestQuestionsWithBuscBackground,
     intermediateQaGradeEightTestQuestionsWithBuscBackground
-  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_test/")
+  ), "/efs/data/dlfa/questions/intermediate/processed/intermediate_4_8_test/question_and_answer/")
 
   /////////////////////////////////////////////////////////////////////
   // Diagram QA
