@@ -578,8 +578,12 @@ object ScienceFiles {
  * These are corpora that can be used for searching, or for training language models, or the like.
  */
 object ScienceCorpora {
-  def buscElasticSearchIndex(numResults: Int): JValue =
+  def buscElasticSearchIndex(
+    numResults: Int,
+    elasticSearchIndexType: String="sentence"
+  ): JValue =
     ("num passages per query" -> numResults) ~
+      ("elastic search index type" -> elasticSearchIndexType) ~
       ("elastic search index url" -> "aristo-es1.dev.ai2") ~
       ("elastic search index port" -> 9300) ~
       ("elastic search cluster name" -> "aristo-es") ~

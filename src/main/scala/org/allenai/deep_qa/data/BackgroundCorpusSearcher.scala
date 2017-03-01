@@ -50,6 +50,7 @@ class LuceneBackgroundCorpusSearcher(params: JValue) extends BackgroundCorpusSea
     "remove query near duplicates",
     "elastic search index url",
     "elastic search index name",
+    "elastic search index type",
     "elastic search cluster name",
     "elastic search index port"
   )
@@ -77,6 +78,7 @@ class LuceneBackgroundCorpusSearcher(params: JValue) extends BackgroundCorpusSea
   val esPort = JsonHelper.extractWithDefault(params, "elastic search index port", 9300)
   val esClusterName = JsonHelper.extractWithDefault(params, "elastic search cluster name", "aristo-es")
   val esIndexName = JsonHelper.extractWithDefault(params, "elastic search index name", Seq("busc"))
+  val esIndexType = JsonHelper.extractWithDefault(params, "elastic search index type", "sentence")
 
   lazy val address = new InetSocketTransportAddress(new InetSocketAddress(esUrl, esPort))
   lazy val settings = Settings.builder().put("cluster.name", esClusterName).build()
@@ -101,7 +103,7 @@ class LuceneBackgroundCorpusSearcher(params: JValue) extends BackgroundCorpusSea
     }
     //Perform the search
     val response = esClient.prepareSearch(esIndexName.toSeq: _*)
-        .setTypes("sentence")
+        .setTypes(esIndexType)
         .setQuery(queryBuilder)
         .setFrom(0).setSize(numPassagesPerQuery * hitMultiplier).setExplain(true)
         .execute()
