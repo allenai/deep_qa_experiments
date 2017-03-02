@@ -45,7 +45,7 @@ object OmnibusDa {
   val omnibusNdda4TrainBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
     omnibusNdda4TrainFile,
     "question and answer",
-    ScienceCorpora.buscElasticSearchIndex(3)
+    ScienceCorpora.buscElasticSearchIndex(3, "paragraph")
   )
   val omnibusNdda4TrainFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
@@ -58,7 +58,7 @@ object OmnibusDa {
   val omnibusNdda4DevBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
     omnibusNdda4DevFile,
     "question and answer",
-    ScienceCorpora.buscElasticSearchIndex(3)
+    ScienceCorpora.buscElasticSearchIndex(3, "paragraph")
   )
   val omnibusNdda4DevFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
@@ -71,7 +71,7 @@ object OmnibusDa {
   val omnibusNdda4TestBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
     omnibusNdda4TestFile,
     "question and answer",
-    ScienceCorpora.buscElasticSearchIndex(3)
+    ScienceCorpora.buscElasticSearchIndex(3, "paragraph")
   )
   val omnibusNdda4TestFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
@@ -87,7 +87,7 @@ object OmnibusDa {
   val omnibusNdda8TrainBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
     omnibusNdda8TrainFile,
     "question and answer",
-    ScienceCorpora.buscElasticSearchIndex(3)
+    ScienceCorpora.buscElasticSearchIndex(3, "paragraph")
   )
   val omnibusNdda8TrainFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
@@ -100,7 +100,7 @@ object OmnibusDa {
   val omnibusNdda8DevBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
     omnibusNdda8DevFile,
     "question and answer",
-    ScienceCorpora.buscElasticSearchIndex(3)
+    ScienceCorpora.buscElasticSearchIndex(3, "paragraph")
   )
   val omnibusNdda8DevFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
@@ -113,7 +113,7 @@ object OmnibusDa {
   val omnibusNdda8TestBuscBackgroundFile = SciQDatasets.makePassageBackgroundFile(
     omnibusNdda8TestFile,
     "question and answer",
-    ScienceCorpora.buscElasticSearchIndex(3)
+    ScienceCorpora.buscElasticSearchIndex(3, "paragraph")
   )
   val omnibusNdda8TestFileWithBackground: JValue =
     ("sentence producer type" -> "combine background and instance") ~
