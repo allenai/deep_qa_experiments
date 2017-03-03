@@ -47,7 +47,7 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
     } yield imperativeModifierRemovedSentence
     // For each sentence, the imperative words will be replaced with "What is" if
     // they occur at the start of the sentence. However, if these
-    // imperative words occur directly before the the interrogative words, we just
+    // imperative words occur directly before the interrogative words, we just
     // delete the imperative words.
     val imperativesBeforeInterrogatives = s"""(?i)^((${imperatives})+) (?=${interrogatives})""".r
     val generalImperatives = s"""(?i)^((${imperatives})+)""".r
