@@ -26,7 +26,7 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
       answerText = line(4)
     } yield (questionText, answerText)
     val instances = instanceTuples.map { case (questionText, answerText) => {
-      DirectAnswerInstance(questionText, Some(answerText))
+      DirectAnswerInstance(imperativeToInterrogative(questionText), Some(answerText))
     }}
     Dataset(instances)
   }
@@ -62,10 +62,15 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
 
       // If the imperative words are still there, it means that they didn't occur
       // before interrogative words and thus we can replace them with "what is"
-      interrogativeSentence = generalImperatives.replaceFirstIn(
+      convertedSentence = generalImperatives.replaceFirstIn(
         imperativeSentenceNoImperativesBeforeInterrogatives,
         "what is"
       )
+      interrogativeSentence = if (convertedSentence != imperativeSentence) {
+        convertedSentence.dropRight(1) + "?"
+      } else {
+        convertedSentence
+      }
 
       // now, strip the excess whitespace on both sides and capitalize
       cleanedInterrogativeSentence = interrogativeSentence.trim.capitalize
