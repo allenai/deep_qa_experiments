@@ -36,22 +36,23 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
 
   val questionText4 = "Even though an adult amphibian can live on land, why must it " +
     "return to the water? (Explain.)"
+  // TODO(nelson): Fix this to preserve case.
   val transformedQuestionText4 = "Even though an adult amphibian can live on land, " +
-    "why must it return to the water? (Explain.)"
+    "why must it return to the water? (explain.)"
 
   // TODO(nelson): Would like to be able to handle plural/singular.
   val questionText5 = "Name four organisms you might find living in or around a " +
     "freshwater lake."
-  val transformedQuestionText5 = "What is four organisms you might find living in or around a " +
+  val transformedQuestionText5 = "What are four organisms you might find living in or around a " +
   "freshwater lake?"
   val questionText6 = "List the conditions that must be present in order for a " +
   "seed to germinate."
-  val transformedQuestionText6 = "What is the conditions that must be present in "+
+  val transformedQuestionText6 = "What are the conditions that must be present in "+
   "order for a seed to germinate?"
 
   // TODO(nelson): not clear how to insert the proper verbs here.
   val questionText7 = "Briefly explain why most animal life on Earth could not survive without plants."
-  val transformedQuestionText7 = "Why most animal life on Earth could not survive without plants?"
+  val transformedQuestionText7 = "Why most animal life on earth could not survive without plants?"
 
   val questionText8 = "The earthworm has no lungs and breathes in oxygen through " +
     "its moist skin. If its skin dries out, the worm will suffocate. " +
@@ -70,6 +71,12 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
 
   val questionText9 = "Explain how the sun provides energy to ecosystems."
   val transformedQuestionText9 = "How the sun provides energy to ecosystems?"
+
+  // Test that non-greedy imperative match works as expected.
+  val questionText10 = "Name two examples of habitats, and one organism that would live in " +
+    "each habitat."
+  val transformedQuestionText10 = "What are two examples of habitats, and one organism that would " +
+    "live in each habitat?"
 
   val datasetFile = "./dataset"
   val datasetFileContents = s"""${header}
@@ -97,5 +104,6 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
     reader.imperativeToInterrogative(questionText7) should be (transformedQuestionText7)
     reader.imperativeToInterrogative(questionText8) should be (transformedQuestionText8)
     reader.imperativeToInterrogative(questionText9) should be (transformedQuestionText9)
+    reader.imperativeToInterrogative(questionText10) should be (transformedQuestionText10)
   }
 }

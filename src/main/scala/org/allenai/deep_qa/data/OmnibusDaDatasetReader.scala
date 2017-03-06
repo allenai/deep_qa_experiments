@@ -38,14 +38,17 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
 
     val imperativeModifierRemovedSentences = for {
       imperativeSentence <- imperativeSentences
-
       // If there is an imperative, remove all words that occur before
       // it (the first imperative) in the sentence. Thus, "Please briefly explain this." becomes
       // "explain this."
       imperativeModifiers = s"""(?i).+?(?=(${imperatives}) )""".r
-      imperativeModifierRemovedSentence = imperativeModifiers.replaceFirstIn(imperativeSentence, "")
+      imperativeModifierRemovedSentence = imperativeModifiers.replaceFirstIn(
+        imperativeSentence.toLowerCase,
+        ""
+      )
     } yield imperativeModifierRemovedSentence
-    // For each sentence, the imperative words will be replaced with "What is" if
+    // For each sentence, the imperative words will be replaced with
+    // "What is" or "What are" if
     // they occur at the start of the sentence. However, if these
     // imperative words occur directly before the interrogative words, we just
     // delete the imperative words.
@@ -60,11 +63,22 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
         ""
       )
 
+      // Figure out whether to replace with "what is" or "what are" by checking whether
+      // the POS tag of the first noun after the imperative is a NN or NNS.
+      posTags = Parser.stanford.parseSentence(imperativeSentence).tokens.map(_.posTag)
+      nnIndex = posTags.drop(1).indexOf("NN")
+      nnsIndex = posTags.drop(1).indexOf("NNS")
+      questionVerb = if (nnsIndex == -1 || (nnIndex < nnsIndex && nnIndex != -1)){
+        "is"
+      }
+      else{
+        "are"
+      }
       // If the imperative words are still there, it means that they didn't occur
       // before interrogative words and thus we can replace them with "what is"
       convertedSentence = generalImperatives.replaceFirstIn(
         imperativeSentenceNoImperativesBeforeInterrogatives,
-        "what is"
+        s"what ${questionVerb}"
       )
       interrogativeSentence = if (convertedSentence != imperativeSentence) {
         convertedSentence.dropRight(1) + "?"
