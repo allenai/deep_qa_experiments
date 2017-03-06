@@ -40,7 +40,6 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
   val transformedQuestionText4 = "Even though an adult amphibian can live on land, " +
     "why must it return to the water? (explain.)"
 
-  // TODO(nelson): Would like to be able to handle plural/singular.
   val questionText5 = "Name four organisms you might find living in or around a " +
     "freshwater lake."
   val transformedQuestionText5 = "What are four organisms you might find living in or around a " +
