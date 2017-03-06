@@ -33,10 +33,10 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
 
   def imperativeToInterrogative(inputImperative: String): String = {
     val imperativeSentences = Parser.stanford.splitSentences(inputImperative)
-    val interrogatives = Seq("who", "what", "when", "where", "why", "how")
+    val interrogatives = Set("who", "what", "when", "where", "why", "how")
     val interrogativesStr = interrogatives.mkString("|")
 
-    val imperatives = Seq("identify", "name", "define", "give", "explain", "describe", "list")
+    val imperatives = Set("identify", "name", "define", "give", "explain", "describe", "list")
     val imperativesStr = imperatives.mkString("|")
 
     val imperativeModifierRemovedSentences = for {
@@ -47,14 +47,12 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
       // "explain this.". However, if the first word is an imperative or an interrogative word,
       // do not remove anything.
       imperativeModifiers = s"""(?i).+?(?=(${imperativesStr}) )""".r
-      imperativeModifierRemovedSentence = if (interrogatives.contains(
-        imperativeSentence.toLowerCase.split(" ").head) ||
-        imperatives.contains(
-          imperativeSentence.toLowerCase.split(" ").head)
-      ) {
+      firstWord = imperativeSentence.toLowerCase.split(" ").head
+
+      imperativeModifierRemovedSentence = if (interrogatives.contains(firstWord) || imperatives.contains(firstWord)) {
         imperativeSentence
       }
-      else{
+      else {
         imperativeModifiers.replaceFirstIn(
           imperativeSentence.toLowerCase,
           ""
@@ -85,7 +83,7 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
       questionVerb = if (nnsIndex == -1 || (nnIndex < nnsIndex && nnIndex != -1)){
         "is"
       }
-      else{
+      else {
         "are"
       }
       // If the imperative words are still there, it means that they didn't occur
