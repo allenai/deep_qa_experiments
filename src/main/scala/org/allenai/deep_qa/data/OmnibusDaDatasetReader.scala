@@ -44,10 +44,13 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
 
       // If there is an imperative, remove all words that occur before
       // it (the first imperative) in the sentence. Thus, "Please briefly explain this." becomes
-      // "explain this."
+      // "explain this.". However, if the first word is an imperative or an interrogative word,
+      // do not remove anything.
       imperativeModifiers = s"""(?i).+?(?=(${imperativesStr}) )""".r
       imperativeModifierRemovedSentence = if (interrogatives.contains(
-        imperativeSentence.toLowerCase.split(" ").head)
+        imperativeSentence.toLowerCase.split(" ").head) ||
+        imperatives.contains(
+          imperativeSentence.toLowerCase.split(" ").head)
       ) {
         imperativeSentence
       }
