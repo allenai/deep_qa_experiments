@@ -33,27 +33,38 @@ class OmnibusDaDatasetReader extends DatasetReader[DirectAnswerInstance] {
 
   def imperativeToInterrogative(inputImperative: String): String = {
     val imperativeSentences = Parser.stanford.splitSentences(inputImperative)
-    val imperatives = """identify|name|define|give|explain|describe|list"""
-    val interrogatives = """who|what|when|where|why|how"""
+    val interrogatives = Seq("who", "what", "when", "where", "why", "how")
+    val interrogativesStr = interrogatives.mkString("|")
+
+    val imperatives = Seq("identify", "name", "define", "give", "explain", "describe", "list")
+    val imperativesStr = imperatives.mkString("|")
 
     val imperativeModifierRemovedSentences = for {
       imperativeSentence <- imperativeSentences
+
       // If there is an imperative, remove all words that occur before
       // it (the first imperative) in the sentence. Thus, "Please briefly explain this." becomes
       // "explain this."
-      imperativeModifiers = s"""(?i).+?(?=(${imperatives}) )""".r
-      imperativeModifierRemovedSentence = imperativeModifiers.replaceFirstIn(
-        imperativeSentence.toLowerCase,
-        ""
-      )
+      imperativeModifiers = s"""(?i).+?(?=(${imperativesStr}) )""".r
+      imperativeModifierRemovedSentence = if (interrogatives.contains(
+        imperativeSentence.toLowerCase.split(" ").head)
+      ) {
+        imperativeSentence
+      }
+      else{
+        imperativeModifiers.replaceFirstIn(
+          imperativeSentence.toLowerCase,
+          ""
+        )
+      }
     } yield imperativeModifierRemovedSentence
     // For each sentence, the imperative words will be replaced with
     // "What is" or "What are" if
     // they occur at the start of the sentence. However, if these
     // imperative words occur directly before the interrogative words, we just
     // delete the imperative words.
-    val imperativesBeforeInterrogatives = s"""(?i)^((${imperatives})+) (?=${interrogatives})""".r
-    val generalImperatives = s"""(?i)^((${imperatives})+)""".r
+    val imperativesBeforeInterrogatives = s"""(?i)^((${imperativesStr})+) (?=${interrogativesStr})""".r
+    val generalImperatives = s"""(?i)^((${imperativesStr})+)""".r
 
     val transformedImperativeSentences = for {
       imperativeSentence <- imperativeModifierRemovedSentences

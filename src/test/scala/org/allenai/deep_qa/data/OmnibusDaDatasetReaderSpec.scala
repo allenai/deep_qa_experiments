@@ -78,6 +78,12 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
   val transformedQuestionText10 = "What are two examples of habitats, and one organism that would " +
     "live in each habitat?"
 
+  val questionText11 = "What is another name for the \"bristles\" " +
+    "mentioned in the reading passage?"
+
+  val transformedQuestionText11 = "What is another name for the " +
+    "\"bristles\" mentioned in the reading passage?"
+
   val datasetFile = "./dataset"
   val datasetFileContents = s"""${header}
       |${row1}
@@ -105,5 +111,6 @@ class OmnibusDaDatasetReaderSpec extends FlatSpecLike with Matchers {
     reader.imperativeToInterrogative(questionText8) should be (transformedQuestionText8)
     reader.imperativeToInterrogative(questionText9) should be (transformedQuestionText9)
     reader.imperativeToInterrogative(questionText10) should be (transformedQuestionText10)
+    reader.imperativeToInterrogative(questionText11) should be (transformedQuestionText11)
   }
 }
