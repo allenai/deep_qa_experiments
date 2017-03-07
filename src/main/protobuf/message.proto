@@ -40,10 +40,9 @@ message Instance {
   repeated Instance contained_instances = 5;
 
   // Direct answer or other instances need a string background passage. This represents that.
+  // This kind of overlaps with background_instances.
   string passage = 6;
 
-  // The label for CharacterSpanInstance is represented as a tuple of Ints
-  repeated int32 span = 7;
 }
 
 message QuestionRequest {
