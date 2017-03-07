@@ -85,7 +85,7 @@ class Client(host: String, port: Int) extends LazyLogging {
         MessageInstance(instanceType, questionText, answerOptions, Seq(), Seq(), "", Seq())
       }
       case i: CharacterSpanInstance => {
-        val instanceType = InstanceType.SPAN_PREDICTION
+        val instanceType = InstanceType.CHARACTER_SPAN
         val questionText = i.question
         val passageText = i.passage
         MessageInstance(instanceType, questionText, Seq(), Seq(), Seq(), passageText, Seq())

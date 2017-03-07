@@ -73,7 +73,7 @@ class SolverServer(message_pb2.SolverServiceServicer):
             question = instance_message.question
             options = instance_message.answer_options
             instance = QuestionAnswerInstance(question, options, None, None)
-        elif instance_type == message_pb2.SPAN_PREDICTION:
+        elif instance_type == message_pb2.CHARACTER_SPAN:
             question = instance_message.question
             passage = instance_message.passage
             instance = CharacterSpanInstance(question, passage, None, None)
