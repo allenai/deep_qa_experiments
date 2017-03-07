@@ -9,8 +9,8 @@ import java.io.StringReader
 import org.json4s._
 import org.json4s.native.JsonMethods.parse
 
-class NewsQaDatasetReader(fileUtil: FileUtil) extends DatasetReader[SpanPredictionInstance] {
-  override def readFile(filename: String): Dataset[SpanPredictionInstance] = {
+class NewsQaDatasetReader(fileUtil: FileUtil) extends DatasetReader[CharacterSpanInstance] {
+  override def readFile(filename: String): Dataset[CharacterSpanInstance] = {
     val reader = new StringReader(fileUtil.readFileContents(filename))
     // read the NewsQA data and discard "bad" questions and questions that
     // do not have an answer present in the passage.
@@ -29,7 +29,7 @@ class NewsQaDatasetReader(fileUtil: FileUtil) extends DatasetReader[SpanPredicti
       val answerStart = labelSplit(0).toInt
       // end character of answer in passage, exclusive
       val answerEnd = labelSplit(1).toInt
-      SpanPredictionInstance(questionText, passageText, Some(answerStart, answerEnd))
+      CharacterSpanInstance(questionText, passageText, Some(answerStart, answerEnd))
     }}
     Dataset(instances)
   }

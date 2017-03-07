@@ -108,7 +108,7 @@ case class SnliInstance(
   * given a question. Used for Stanford Question Answering Dataset (SQuAD)
   * and NewsQA dataset.
   */
-case class SpanPredictionInstance(
+case class CharacterSpanInstance(
   question: String,
   passage: String,
   override val label: Option[(Int, Int)]

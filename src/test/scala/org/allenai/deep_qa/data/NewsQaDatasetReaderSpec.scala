@@ -99,10 +99,10 @@ class NewsQaDatasetReaderSpec extends FlatSpecLike with Matchers {
     dataset.instances.size should be (4)
 
     // note that whitespace was trimmed following the answer.
-    dataset.instances(0) should be(SpanPredictionInstance(question1, fixedPassage1, Some(288, 290)))
-    dataset.instances(1) should be(SpanPredictionInstance(question2, fixedPassage2, Some(34, 59)))
-    dataset.instances(2) should be(SpanPredictionInstance(question3, fixedPassage3, Some(103, 126)))
-    dataset.instances(3) should be(SpanPredictionInstance(question4, fixedPassage4, Some(191, 222)))
+    dataset.instances(0) should be(CharacterSpanInstance(question1, fixedPassage1, Some(288, 290)))
+    dataset.instances(1) should be(CharacterSpanInstance(question2, fixedPassage2, Some(34, 59)))
+    dataset.instances(2) should be(CharacterSpanInstance(question3, fixedPassage3, Some(103, 126)))
+    dataset.instances(3) should be(CharacterSpanInstance(question4, fixedPassage4, Some(191, 222)))
 
     dataset.instances(0).passage.substring(dataset.instances(0).label.get._1, dataset.instances(0).label.get._2) should be (answer1)
     dataset.instances(1).passage.substring(dataset.instances(1).label.get._1, dataset.instances(1).label.get._2) should be (answer2)
