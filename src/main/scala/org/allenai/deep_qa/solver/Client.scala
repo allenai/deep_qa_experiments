@@ -4,6 +4,7 @@ import scala.sys.process.Process
 
 import org.allenai.deep_qa.data.Instance
 import org.allenai.deep_qa.data.BackgroundInstance
+import org.allenai.deep_qa.data.CharacterSpanInstance
 import org.allenai.deep_qa.data.QuestionAnswerInstance
 import org.allenai.deep_qa.data.MultipleTrueFalseInstance
 import org.allenai.deep_qa.data.TrueFalseInstance
@@ -70,18 +71,24 @@ class Client(host: String, port: Int) extends LazyLogging {
         val instanceType = InstanceType.QUESTION_ANSWER
         val questionText = i.question
         val answerOptions = i.answers
-        MessageInstance(instanceType, questionText, answerOptions, Seq(), Seq())
+        MessageInstance(instanceType, questionText, answerOptions, Seq(), Seq(), "", Seq())
       }
       case i: MultipleTrueFalseInstance[_] => {
         val instanceType = InstanceType.MULTIPLE_TRUE_FALSE
         val containedInstances = i.instances.map(instanceToMessage)
-        MessageInstance(instanceType, "", Seq(), Seq(), containedInstances)
+        MessageInstance(instanceType, "", Seq(), Seq(), containedInstances, "", Seq())
       }
       case i: TrueFalseInstance => {
         val instanceType = InstanceType.TRUE_FALSE
         val questionText = i.statement
         val answerOptions = Seq()
-        MessageInstance(instanceType, questionText, answerOptions, Seq())
+        MessageInstance(instanceType, questionText, answerOptions, Seq(), Seq(), "", Seq())
+      }
+      case i: CharacterSpanInstance => {
+        val instanceType = InstanceType.SPAN_PREDICTION
+        val questionText = i.question
+        val passageText = i.passage
+        MessageInstance(instanceType, questionText, Seq(), Seq(), Seq(), passageText, Seq())
       }
     }
   }
