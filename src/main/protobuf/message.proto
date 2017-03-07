@@ -17,6 +17,7 @@ enum InstanceType {
   TRUE_FALSE = 1;
   MULTIPLE_TRUE_FALSE = 2;
   QUESTION_ANSWER = 3;
+  CHARACTER_SPAN = 4;
 }
 
 message Instance {
@@ -37,6 +38,13 @@ message Instance {
   // background sentences.  In these instances, all other fields will be empty (except the type),
   // and this will be populated.
   repeated Instance contained_instances = 5;
+
+  // Direct answer or other instances need a string background passage. This represents that.
+  // This partially overlaps with background_instances, except that this field expects a single
+  // concatenated string of background knowledge, whlie background_instances takes a collection
+  // of background Instance objects (e.g. tuples).
+  string passage = 6;
+
 }
 
 message QuestionRequest {

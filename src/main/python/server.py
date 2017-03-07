@@ -20,6 +20,7 @@ from deep_qa.common.checks import ensure_pythonhashseed_set
 from deep_qa.common.params import get_choice
 from deep_qa.models import concrete_models
 
+from deep_qa.data.instances.character_span_instance import CharacterSpanInstance
 from deep_qa.data.instances.true_false_instance import TrueFalseInstance
 from deep_qa.data.instances.multiple_true_false_instance import MultipleTrueFalseInstance
 from deep_qa.data.instances.question_answer_instance import QuestionAnswerInstance
@@ -72,6 +73,10 @@ class SolverServer(message_pb2.SolverServiceServicer):
             question = instance_message.question
             options = instance_message.answer_options
             instance = QuestionAnswerInstance(question, options, None, None)
+        elif instance_type == message_pb2.CHARACTER_SPAN:
+            question = instance_message.question
+            passage = instance_message.passage
+            instance = CharacterSpanInstance(question, passage, None, None)
         else:
             raise RuntimeError("Unrecognized instance type: " + instance_type)
         if instance_message.background_instances:
