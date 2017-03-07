@@ -17,6 +17,7 @@ enum InstanceType {
   TRUE_FALSE = 1;
   MULTIPLE_TRUE_FALSE = 2;
   QUESTION_ANSWER = 3;
+  SPAN_PREDICTION = 4;
 }
 
 message Instance {
@@ -37,6 +38,12 @@ message Instance {
   // background sentences.  In these instances, all other fields will be empty (except the type),
   // and this will be populated.
   repeated Instance contained_instances = 5;
+
+  // Direct answer or other instances need a string background passage. This represents that.
+  string passage = 6;
+
+  // The label for span prediction is represented as a tuple of Ints
+  repeated int32 span = 7;
 }
 
 message QuestionRequest {
