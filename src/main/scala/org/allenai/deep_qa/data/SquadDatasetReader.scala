@@ -6,8 +6,8 @@ import com.mattg.util.FileUtil
 import org.json4s._
 import org.json4s.native.JsonMethods.parse
 
-class SquadDatasetReader(fileUtil: FileUtil) extends DatasetReader[SpanPredictionInstance] {
-  override def readFile(filename: String): Dataset[SpanPredictionInstance] = {
+class SquadDatasetReader(fileUtil: FileUtil) extends DatasetReader[CharacterSpanInstance] {
+  override def readFile(filename: String): Dataset[CharacterSpanInstance] = {
     val json = parse(fileUtil.readFileContents(filename))
     val instanceTuples = for {
       JObject(article) <- json \ "data"
@@ -33,7 +33,7 @@ class SquadDatasetReader(fileUtil: FileUtil) extends DatasetReader[SpanPredictio
       val uniqueAnswers = answerTuples.groupBy(identity).mapValues(_.size).toList.sortBy(-_._2)
       val mostFrequentAnswer = uniqueAnswers.head._1
       val (answerStart, answerText) = mostFrequentAnswer
-      SpanPredictionInstance(question, paragraph, Some(answerStart, answerStart + answerText.size))
+      CharacterSpanInstance(question, paragraph, Some(answerStart, answerStart + answerText.size))
     }}
     Dataset(instances)
   }
