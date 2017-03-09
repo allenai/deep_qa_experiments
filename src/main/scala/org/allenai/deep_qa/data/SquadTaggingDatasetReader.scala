@@ -74,7 +74,7 @@ class SquadTaggingDatasetReader(
         val endOverlaps = candidateSpanEnd >= spanStart && candidateSpanStart <= spanEnd
         beginOverlaps || endOverlaps
       }}
-      if (!overlaps.foldLeft(false)(_ || _)) {
+      if (!overlaps.exists(_ == true)) {
         keptSpans += candidateSpan
       }
     }
