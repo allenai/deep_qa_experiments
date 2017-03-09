@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='message.proto',
   package='deep_qa',
   syntax='proto3',
-  serialized_pb=_b('\n\rmessage.proto\x12\x07\x64\x65\x65p_qa\"\xba\x01\n\x08Instance\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.InstanceType\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x16\n\x0e\x61nswer_options\x18\x03 \x03(\t\x12/\n\x14\x62\x61\x63kground_instances\x18\x04 \x03(\x0b\x32\x11.deep_qa.Instance\x12.\n\x13\x63ontained_instances\x18\x05 \x03(\x0b\x32\x11.deep_qa.Instance\"6\n\x0fQuestionRequest\x12#\n\x08question\x18\x01 \x01(\x0b\x32\x11.deep_qa.Instance\"\"\n\x10QuestionResponse\x12\x0e\n\x06scores\x18\x01 \x03(\x01*[\n\x0cInstanceType\x12\r\n\tUNDEFINED\x10\x00\x12\x0e\n\nTRUE_FALSE\x10\x01\x12\x17\n\x13MULTIPLE_TRUE_FALSE\x10\x02\x12\x13\n\x0fQUESTION_ANSWER\x10\x03\x32X\n\rSolverService\x12G\n\x0e\x41nswerQuestion\x12\x18.deep_qa.QuestionRequest\x1a\x19.deep_qa.QuestionResponse\"\x00\x42\x15\n\x13org.allenai.deep_qab\x06proto3')
+  serialized_pb=_b('\n\rmessage.proto\x12\x07\x64\x65\x65p_qa\"\xcb\x01\n\x08Instance\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.InstanceType\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x16\n\x0e\x61nswer_options\x18\x03 \x03(\t\x12/\n\x14\x62\x61\x63kground_instances\x18\x04 \x03(\x0b\x32\x11.deep_qa.Instance\x12.\n\x13\x63ontained_instances\x18\x05 \x03(\x0b\x32\x11.deep_qa.Instance\x12\x0f\n\x07passage\x18\x06 \x01(\t\"6\n\x0fQuestionRequest\x12#\n\x08question\x18\x01 \x01(\x0b\x32\x11.deep_qa.Instance\"\"\n\x10QuestionResponse\x12\x0e\n\x06scores\x18\x01 \x03(\x01*o\n\x0cInstanceType\x12\r\n\tUNDEFINED\x10\x00\x12\x0e\n\nTRUE_FALSE\x10\x01\x12\x17\n\x13MULTIPLE_TRUE_FALSE\x10\x02\x12\x13\n\x0fQUESTION_ANSWER\x10\x03\x12\x12\n\x0e\x43HARACTER_SPAN\x10\x04\x32X\n\rSolverService\x12G\n\x0e\x41nswerQuestion\x12\x18.deep_qa.QuestionRequest\x1a\x19.deep_qa.QuestionResponse\"\x00\x42\x15\n\x13org.allenai.deep_qab\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -46,11 +46,15 @@ _INSTANCETYPE = _descriptor.EnumDescriptor(
       name='QUESTION_ANSWER', index=3, number=3,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CHARACTER_SPAN', index=4, number=4,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=307,
-  serialized_end=398,
+  serialized_start=324,
+  serialized_end=435,
 )
 _sym_db.RegisterEnumDescriptor(_INSTANCETYPE)
 
@@ -59,6 +63,7 @@ UNDEFINED = 0
 TRUE_FALSE = 1
 MULTIPLE_TRUE_FALSE = 2
 QUESTION_ANSWER = 3
+CHARACTER_SPAN = 4
 
 
 
@@ -104,6 +109,13 @@ _INSTANCE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='passage', full_name='deep_qa.Instance.passage', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -117,7 +129,7 @@ _INSTANCE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=27,
-  serialized_end=213,
+  serialized_end=230,
 )
 
 
@@ -147,8 +159,8 @@ _QUESTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=215,
-  serialized_end=269,
+  serialized_start=232,
+  serialized_end=286,
 )
 
 
@@ -178,8 +190,8 @@ _QUESTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=271,
-  serialized_end=305,
+  serialized_start=288,
+  serialized_end=322,
 )
 
 _INSTANCE.fields_by_name['type'].enum_type = _INSTANCETYPE
@@ -215,112 +227,117 @@ _sym_db.RegisterMessage(QuestionResponse)
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\023org.allenai.deep_qa'))
-import grpc
-from grpc.beta import implementations as beta_implementations
-from grpc.beta import interfaces as beta_interfaces
-from grpc.framework.common import cardinality
-from grpc.framework.interfaces.face import utilities as face_utilities
+try:
+  # THESE ELEMENTS WILL BE DEPRECATED.
+  # Please use the generated *_pb2_grpc.py files instead.
+  import grpc
+  from grpc.framework.common import cardinality
+  from grpc.framework.interfaces.face import utilities as face_utilities
+  from grpc.beta import implementations as beta_implementations
+  from grpc.beta import interfaces as beta_interfaces
 
 
-class SolverServiceStub(object):
-  """The service definition
-  """
-
-  def __init__(self, channel):
-    """Constructor.
-
-    Args:
-      channel: A grpc.Channel.
+  class SolverServiceStub(object):
+    """The service definition
     """
-    self.AnswerQuestion = channel.unary_unary(
-        '/deep_qa.SolverService/AnswerQuestion',
-        request_serializer=QuestionRequest.SerializeToString,
-        response_deserializer=QuestionResponse.FromString,
-        )
+
+    def __init__(self, channel):
+      """Constructor.
+
+      Args:
+        channel: A grpc.Channel.
+      """
+      self.AnswerQuestion = channel.unary_unary(
+          '/deep_qa.SolverService/AnswerQuestion',
+          request_serializer=QuestionRequest.SerializeToString,
+          response_deserializer=QuestionResponse.FromString,
+          )
 
 
-class SolverServiceServicer(object):
-  """The service definition
-  """
+  class SolverServiceServicer(object):
+    """The service definition
+    """
 
-  def AnswerQuestion(self, request, context):
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-
-def add_SolverServiceServicer_to_server(servicer, server):
-  rpc_method_handlers = {
-      'AnswerQuestion': grpc.unary_unary_rpc_method_handler(
-          servicer.AnswerQuestion,
-          request_deserializer=QuestionRequest.FromString,
-          response_serializer=QuestionResponse.SerializeToString,
-      ),
-  }
-  generic_handler = grpc.method_handlers_generic_handler(
-      'deep_qa.SolverService', rpc_method_handlers)
-  server.add_generic_rpc_handlers((generic_handler,))
+    def AnswerQuestion(self, request, context):
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
 
 
-class BetaSolverServiceServicer(object):
-  """The Beta API is deprecated for 0.15.0 and later.
-
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This class was generated
-  only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-  """The service definition
-  """
-  def AnswerQuestion(self, request, context):
-    context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-class BetaSolverServiceStub(object):
-  """The Beta API is deprecated for 0.15.0 and later.
-
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This class was generated
-  only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-  """The service definition
-  """
-  def AnswerQuestion(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-    raise NotImplementedError()
-  AnswerQuestion.future = None
+  def add_SolverServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+        'AnswerQuestion': grpc.unary_unary_rpc_method_handler(
+            servicer.AnswerQuestion,
+            request_deserializer=QuestionRequest.FromString,
+            response_serializer=QuestionResponse.SerializeToString,
+        ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+        'deep_qa.SolverService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
 
 
-def beta_create_SolverService_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-  """The Beta API is deprecated for 0.15.0 and later.
+  class BetaSolverServiceServicer(object):
+    """The Beta API is deprecated for 0.15.0 and later.
 
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This function was
-  generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-  request_deserializers = {
-    ('deep_qa.SolverService', 'AnswerQuestion'): QuestionRequest.FromString,
-  }
-  response_serializers = {
-    ('deep_qa.SolverService', 'AnswerQuestion'): QuestionResponse.SerializeToString,
-  }
-  method_implementations = {
-    ('deep_qa.SolverService', 'AnswerQuestion'): face_utilities.unary_unary_inline(servicer.AnswerQuestion),
-  }
-  server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-  return beta_implementations.server(method_implementations, options=server_options)
+    It is recommended to use the GA API (classes and functions in this
+    file not marked beta) for all further purposes. This class was generated
+    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
+    """The service definition
+    """
+    def AnswerQuestion(self, request, context):
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
 
 
-def beta_create_SolverService_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-  """The Beta API is deprecated for 0.15.0 and later.
+  class BetaSolverServiceStub(object):
+    """The Beta API is deprecated for 0.15.0 and later.
 
-  It is recommended to use the GA API (classes and functions in this
-  file not marked beta) for all further purposes. This function was
-  generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-  request_serializers = {
-    ('deep_qa.SolverService', 'AnswerQuestion'): QuestionRequest.SerializeToString,
-  }
-  response_deserializers = {
-    ('deep_qa.SolverService', 'AnswerQuestion'): QuestionResponse.FromString,
-  }
-  cardinalities = {
-    'AnswerQuestion': cardinality.Cardinality.UNARY_UNARY,
-  }
-  stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-  return beta_implementations.dynamic_stub(channel, 'deep_qa.SolverService', cardinalities, options=stub_options)
+    It is recommended to use the GA API (classes and functions in this
+    file not marked beta) for all further purposes. This class was generated
+    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
+    """The service definition
+    """
+    def AnswerQuestion(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      raise NotImplementedError()
+    AnswerQuestion.future = None
+
+
+  def beta_create_SolverService_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
+    """The Beta API is deprecated for 0.15.0 and later.
+
+    It is recommended to use the GA API (classes and functions in this
+    file not marked beta) for all further purposes. This function was
+    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
+    request_deserializers = {
+      ('deep_qa.SolverService', 'AnswerQuestion'): QuestionRequest.FromString,
+    }
+    response_serializers = {
+      ('deep_qa.SolverService', 'AnswerQuestion'): QuestionResponse.SerializeToString,
+    }
+    method_implementations = {
+      ('deep_qa.SolverService', 'AnswerQuestion'): face_utilities.unary_unary_inline(servicer.AnswerQuestion),
+    }
+    server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
+    return beta_implementations.server(method_implementations, options=server_options)
+
+
+  def beta_create_SolverService_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
+    """The Beta API is deprecated for 0.15.0 and later.
+
+    It is recommended to use the GA API (classes and functions in this
+    file not marked beta) for all further purposes. This function was
+    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
+    request_serializers = {
+      ('deep_qa.SolverService', 'AnswerQuestion'): QuestionRequest.SerializeToString,
+    }
+    response_deserializers = {
+      ('deep_qa.SolverService', 'AnswerQuestion'): QuestionResponse.FromString,
+    }
+    cardinalities = {
+      'AnswerQuestion': cardinality.Cardinality.UNARY_UNARY,
+    }
+    stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
+    return beta_implementations.dynamic_stub(channel, 'deep_qa.SolverService', cardinalities, options=stub_options)
+except ImportError:
+  pass
 # @@protoc_insertion_point(module_scope)
