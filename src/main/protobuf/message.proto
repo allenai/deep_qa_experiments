@@ -52,7 +52,7 @@ message QuestionRequest {
 }
 
 enum QuestionType {
-  UNDEFINED = 0;
+  UNDEFINED_QUESTION_TYPE = 0;
   MULTIPLE_CHOICE = 1;
   DIRECT_ANSWER = 2;
 }
