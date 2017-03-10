@@ -19,12 +19,15 @@ from keras import backend as K
 from deep_qa.common.checks import ensure_pythonhashseed_set
 from deep_qa.common.params import get_choice
 from deep_qa.models import concrete_models
+from deep_qa.models.reading_comprehension.bidirectional_attention import BidirectionalAttentionFlow
+
 
 from deep_qa.data.instances.character_span_instance import CharacterSpanInstance
 from deep_qa.data.instances.true_false_instance import TrueFalseInstance
 from deep_qa.data.instances.multiple_true_false_instance import MultipleTrueFalseInstance
 from deep_qa.data.instances.question_answer_instance import QuestionAnswerInstance
 from deep_qa.data.instances.background_instance import BackgroundInstance
+
 from proto import message_pb2
 
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
@@ -33,6 +36,9 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class SolverServer(message_pb2.SolverServiceServicer):
     def __init__(self, solver):
         self.solver = solver
+        self.answersMultipleChoiceQuestions = True
+        if isinstance(self.solver, BidirectionalAttentionFlow):
+            self.answersMultipleChoiceQuestions = False
         if K.backend() == "tensorflow":
             import tensorflow
             self.graph = tensorflow.get_default_graph()
@@ -54,8 +60,15 @@ class SolverServer(message_pb2.SolverServiceServicer):
             print("Instance was: " + str(instance))
             raise
         response = message_pb2.QuestionResponse()
-        for score in scores.tolist():
-            response.scores.extend(score)
+        if self.answers_multiple_choice_questions:
+            response.type = message_pb2.MULTIPLE_CHOICE
+            for score in scores.tolist():
+                response.scores.extend(score)
+        else:
+            response.type = message_pb2.DIRECT_ANSWER
+            begin_span_idx, end_span_idx = scores
+            string_response = instance.passage_text[begin_span_idx, end_span_idx]
+            response.answer = string_response
         return response
 
     def read_instance_message(self, instance_message):
