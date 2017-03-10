@@ -36,9 +36,9 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 class SolverServer(message_pb2.SolverServiceServicer):
     def __init__(self, solver):
         self.solver = solver
-        self.answersMultipleChoiceQuestions = True
+        self.answers_multiple_choice_questions = True
         if isinstance(self.solver, BidirectionalAttentionFlow):
-            self.answersMultipleChoiceQuestions = False
+            self.answers_multiple_choice_questions = False
         if K.backend() == "tensorflow":
             import tensorflow
             self.graph = tensorflow.get_default_graph()
