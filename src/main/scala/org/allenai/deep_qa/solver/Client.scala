@@ -49,11 +49,11 @@ class Client(host: String, port: Int) extends LazyLogging {
     instance match {
       case i: CharacterSpanInstance => {
         // We are answering a direct answer question.
-        ScienceAnswer(Seq(), response.answer)
+        ScienceAnswer(None, Some(response.answer))
       }
       case _ => {
         // We are answering a multiple choice question
-        ScienceAnswer(response.scores, "")
+        ScienceAnswer(Some(response.scores), None)
       }
     }
   }
