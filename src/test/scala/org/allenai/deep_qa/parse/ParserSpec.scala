@@ -13,11 +13,11 @@ class StanfordParserSpec extends FlatSpecLike with Matchers {
         Dependency("ROOT", 0, "eat", 2, "root")
       ),
       Seq(
-        Token("People", "NNS", "people", 1),
-        Token("eat", "VBP", "eat", 2),
-        Token("good", "JJ", "good", 3),
-        Token("food", "NN", "food", 4),
-        Token(".", ".", ".", 5)
+        Token("People", "NNS", "people", 1, Some(0)),
+        Token("eat", "VBP", "eat", 2, Some(7)),
+        Token("good", "JJ", "good", 3, Some(11)),
+        Token("food", "NN", "food", 4, Some(16)),
+        Token(".", ".", ".", 5, Some(20))
       )
     ),
     "Mary went to the store." -> (
@@ -28,12 +28,12 @@ class StanfordParserSpec extends FlatSpecLike with Matchers {
         Dependency("ROOT", 0, "went", 2, "root")
       ),
       Seq(
-        Token("Mary", "NNP", "mary", 1),
-        Token("went", "VBD", "go", 2),
-        Token("to", "TO", "to", 3),
-        Token("the", "DT", "the", 4),
-        Token("store", "NN", "store", 5),
-        Token(".", ".", ".", 6)
+        Token("Mary", "NNP", "mary", 1, Some(0)),
+        Token("went", "VBD", "go", 2, Some(5)),
+        Token("to", "TO", "to", 3, Some(10)),
+        Token("the", "DT", "the", 4, Some(13)),
+        Token("store", "NN", "store", 5, Some(17)),
+        Token(".", ".", ".", 6, Some(22))
       )
     )
   )
@@ -87,10 +87,10 @@ class StanfordParserSpec extends FlatSpecLike with Matchers {
       val tokens = sentenceParses(sentence)._2
     }
     parse.dependencyTree.get should be(
-      DependencyTree(Token("eat", "VBP", "eat", 2), Seq(
-        (DependencyTree(Token("People", "NNS", "people", 1), Seq()), "nsubj"),
-        (DependencyTree(Token("food", "NN", "food", 4), Seq(
-          (DependencyTree(Token("good", "JJ", "good", 3), Seq()), "amod"))), "dobj"))))
+      DependencyTree(Token("eat", "VBP", "eat", 2, Some(7)), Seq(
+        (DependencyTree(Token("People", "NNS", "people", 1, Some(0)), Seq()), "nsubj"),
+        (DependencyTree(Token("food", "NN", "food", 4, Some(16)), Seq(
+          (DependencyTree(Token("good", "JJ", "good", 3, Some(11)), Seq()), "amod"))), "dobj"))))
   }
 
   it should "return None if the root has no children" in {

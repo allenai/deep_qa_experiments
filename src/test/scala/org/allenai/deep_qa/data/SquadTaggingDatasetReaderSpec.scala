@@ -1,11 +1,12 @@
 package org.allenai.deep_qa.data
 
-import com.mattg.util.FakeFileUtil
+import com.mattg.util.FileUtil
+import org.json4s._
+import org.json4s.JsonDSL._
 import org.scalatest._
 
-class SquadDatasetReaderSpec extends FlatSpecLike with Matchers {
+class SquadTaggingDatasetReaderSpec extends FlatSpecLike with Matchers {
 
-  val fileUtil = new FakeFileUtil
   val paragraph1 = "Architecturally, the school has a Catholic character. Atop the Main " +
     "Building's gold dome is a golden statue of the Virgin Mary. Immediately in front of the Main " +
     "Building and facing it, is a copper statue of Christ with arms upraised with the legend " +
@@ -39,7 +40,7 @@ class SquadDatasetReaderSpec extends FlatSpecLike with Matchers {
   val answer31 = "Apple"
   val question32 = "In what year was the iPod most recently redesigned?"
   val answer32 = "2015"
-  val datasetFile = "/dataset"
+  val datasetFile = "./dataset"
   val datasetFileContents = s"""{
       |"data": [
       |  {
@@ -141,20 +142,79 @@ class SquadDatasetReaderSpec extends FlatSpecLike with Matchers {
       |"version": "1.1"
       |}""".stripMargin
 
-  fileUtil.addFileToBeRead(datasetFile, datasetFileContents)
-  val reader = new SquadDatasetReader(fileUtil)
 
   "readFile" should "return a correct dataset" in {
+    val fileUtil = new FileUtil
+    val reader = new SquadTaggingDatasetReader(("tokenize" -> false): JValue)
+    fileUtil.mkdirsForFile(datasetFile)
+    fileUtil.writeContentsToFile(datasetFile, datasetFileContents)
     val dataset = reader.readFile(datasetFile)
+    fileUtil.deleteFile(datasetFile)
 
     val fixedParagraph1 = paragraph1.replace("\\\"", "\"")
-    dataset.instances.size should be(7)
-    dataset.instances(0) should be(CharacterSpanInstance(question11, fixedParagraph1, Some(515, 515 + answer11.size)))
-    dataset.instances(1) should be(CharacterSpanInstance(question12, fixedParagraph1, Some(92, 92 + answer12.size)))
-    dataset.instances(2) should be(CharacterSpanInstance(question21, paragraph2, Some(3, 3 + answer21.size)))
-    dataset.instances(3) should be(CharacterSpanInstance(question22, paragraph2, Some(222, 222 + answer22.size)))
-    dataset.instances(4) should be(CharacterSpanInstance(question23, paragraph2, Some(49, 49 + answer23.size)))
-    dataset.instances(5) should be(CharacterSpanInstance(question31, paragraph3, Some(105, 105 + answer31.size)))
-    dataset.instances(6) should be(CharacterSpanInstance(question32, paragraph3, Some(286, 286 + answer32.size)))
+    val paragraph1label = Map("answers" -> Seq((92, 92 + answer12.size), (515, 515 + answer11.size)))
+    val paragraph2label = Map("answers" -> Seq((3, 3 + answer21.size), (49, 49 + answer23.size), (222, 222 + answer22.size)))
+    val paragraph3label = Map("answers" -> Seq((105, 105 + answer31.size), (286, 286 + answer32.size)))
+    dataset.instances.size should be(3)
+    dataset.instances(0) should be(SequenceTaggingInstance(fixedParagraph1, Some(paragraph1label.toString)))
+    dataset.instances(1) should be(SequenceTaggingInstance(paragraph2, Some(paragraph2label.toString)))
+    dataset.instances(2) should be(SequenceTaggingInstance(paragraph3, Some(paragraph3label.toString)))
+  }
+
+  "resolveConflicts" should "remove subset spans" in {
+    val reader = new SquadTaggingDatasetReader(("tokenize" -> false): JValue)
+    val spans = Seq((5, "a span"), (7, "span"))
+    val expectedSpans = Seq(spans(0))
+    reader.resolveConflicts(spans) should be(expectedSpans)
+  }
+
+  "resolveConflicts" should "remove partially-overlapping spans (keeping the longer one)" in {
+    val reader = new SquadTaggingDatasetReader(("tokenize" -> false): JValue)
+    val spans = Seq((5, "a span"), (7, "span with overlap"))
+    val expectedSpans = Seq(spans(1))
+    reader.resolveConflicts(spans) should be(expectedSpans)
+  }
+
+  "resolveConflicts" should "keep disjoint spans" in {
+    val reader = new SquadTaggingDatasetReader(("tokenize" -> false): JValue)
+    val spans = Seq((5, "a span"), (20, "a span"))
+    val expectedSpans = spans
+    reader.resolveConflicts(spans) should be(expectedSpans)
+  }
+
+  "resolveConflicts" should "work with several spans" in {
+    val reader = new SquadTaggingDatasetReader(("tokenize" -> false): JValue)
+    val spans = Seq((5, "a span"), (7, "span with overlap"), (40, "a span"), (42, "span with overlap"))
+    val expectedSpans = Seq(spans(1), spans(3))
+    reader.resolveConflicts(spans) should be(expectedSpans)
+  }
+
+  "tagPassage" should "correctly tag a passage" in {
+    val reader = new SquadTaggingDatasetReader(("tokenize" -> false): JValue)
+    val passage = "This is an example passage.  It has two sentences and three correct spans and extra words."
+    val spans = Seq((8, "an example passage"), (36, "two sentences"), (54, "three correct spans"))
+    val expectedTags = Seq(
+      ("This", "O"),
+      ("is", "O"),
+      ("an", "B"),
+      ("example", "I"),
+      ("passage", "I"),
+      (".", "O"),
+      ("It", "O"),
+      ("has", "O"),
+      ("two", "B"),
+      ("sentences", "I"),
+      ("and", "O"),
+      ("three", "B"),
+      ("correct", "I"),
+      ("spans", "I"),
+      ("and", "O"),
+      ("extra", "O"),
+      ("words", "O"),
+      (".", "O")
+    )
+    val taggedInstance = reader.tagPassage(passage, spans)
+    val tags = taggedInstance.tokens.zip(taggedInstance.label.get)
+    tags should be(expectedTags)
   }
 }

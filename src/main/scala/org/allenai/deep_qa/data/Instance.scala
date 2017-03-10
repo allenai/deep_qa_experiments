@@ -152,3 +152,32 @@ case class McQuestionAnswerInstance(
     Seq(Seq(s"$passage\t$question\t$answerString" + labelString))
   }
 }
+
+trait BaseTaggingInstance extends Instance
+
+case class SequenceTaggingInstance(
+  passage: String,
+  override val label: Option[String]
+) extends BaseTaggingInstance {
+  def asStrings(): Seq[Seq[String]] = {
+    val labelString = label.map(l => s"\t$l").getOrElse("")
+    Seq(Seq(s"$passage" + labelString))
+  }
+}
+
+case class PreTokenizedSequenceTaggingInstance(
+  tokens: Seq[String],
+  override val label: Option[Seq[String]]
+) extends BaseTaggingInstance {
+  def asStrings(): Seq[Seq[String]] = {
+    val tokensString = label match {
+      case None => {
+        tokens.map(token => "${token}###").mkString("\t")
+      }
+      case Some(tags) => {
+        (tokens.zip(tags).map { case (token, tag) => { s"${token}###${tag}" }}).mkString("\t")
+      }
+    }
+    Seq(Seq(s"$tokensString"))
+  }
+}

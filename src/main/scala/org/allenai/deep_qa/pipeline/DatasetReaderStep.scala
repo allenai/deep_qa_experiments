@@ -27,7 +27,7 @@ class DatasetReaderStep(
 
   val inputFile = (params \ "input file").extract[String]
   val outputFiles = (params \ "output files").extract[List[String]]
-  val reader = DatasetReader.readers((params \ "reader").extract[String])(fileUtil)
+  val reader = DatasetReader.create(params \ "reader", fileUtil)
 
   // SentenceProducers need to specify an outputFile member variable, that will
   // occasionally get read by other SentenceProducers.  We set this with

@@ -21,6 +21,7 @@ import scala.collection.JavaConverters._
 // you feel like using.
 trait Parser {
   def parseSentence(sentence: String): ParsedSentence
+  def parseSentences(sentences: String): Seq[ParsedSentence]
   def splitSentences(document: String): Seq[String]
 }
 
@@ -86,6 +87,12 @@ class StanfordParser extends Parser {
     parsed
   }
 
+  override def parseSentences(sentences: String): Seq[ParsedSentence] = {
+    val annotation = new Annotation(sentences)
+    pipeline.annotate(annotation)
+    annotation.get(classOf[CoreAnnotations.SentencesAnnotation]).asScala.map(new StanfordParsedSentence(_))
+  }
+
   override def splitSentences(document: String): Seq[String] = {
     val annotation = new Annotation(document)
     sentenceSplitterPipeline.annotate(annotation)
@@ -114,7 +121,8 @@ class StanfordParsedSentence(sentence: CoreMap) extends ParsedSentence {
       val posTag = token.get(classOf[CoreAnnotations.PartOfSpeechAnnotation])
       val word = token.get(classOf[CoreAnnotations.TextAnnotation])
       val lemma = token.get(classOf[CoreAnnotations.LemmaAnnotation])
-      Token(word, posTag, lemma.toLowerCase, token.index)
+      val spanBegin = token.get(classOf[CoreAnnotations.CharacterOffsetBeginAnnotation])
+      Token(word, posTag, lemma.toLowerCase, token.index, Some(spanBegin))
     }).toSeq
   }
 }
