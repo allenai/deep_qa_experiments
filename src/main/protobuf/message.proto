@@ -51,9 +51,20 @@ message QuestionRequest {
   Instance question = 1;
 }
 
+enum QuestionType {
+  UNDEFINED_QUESTION_TYPE = 0;
+  MULTIPLE_CHOICE = 1;
+  DIRECT_ANSWER = 2;
+}
+
 message QuestionResponse {
+  QuestionType type = 1;
+
   // This returns one double for each answer option, in the same order in which the answer options
   // were given.  If there were no answer options (e.g., for TRUE_FALSE instances), this will be a
-  // single double, giving the score of "true".
-  repeated double scores = 1;
+  // single double, giving the score of "true". This is only used for multiple choice questions.
+  repeated double scores = 2;
+
+  // This returns one string for the question. This is only used for direct answer questions.
+  string answer = 3;
 }

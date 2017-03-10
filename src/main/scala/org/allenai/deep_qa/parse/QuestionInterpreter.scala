@@ -18,6 +18,10 @@ import org.allenai.nlpstack.parse.poly.core.{Token => PPToken}
 case class Answer(text: String, isCorrect: Boolean)
 case class ScienceQuestion(sentences: Seq[String], answers: Seq[Answer])
 
+// Direct Answer responses should use the answer field, and multiple choice responses
+// should use the scores field (probabilities over possible choices).
+case class ScienceAnswer(scores: Option[Seq[Double]], answer: Option[String])
+
 /**
  * A QuestionInterpreter takes a question and converts it into a representation usable by other
  * parts of the system.

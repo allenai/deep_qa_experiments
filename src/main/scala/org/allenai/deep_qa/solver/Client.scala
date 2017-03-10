@@ -14,6 +14,7 @@ import org.allenai.deep_qa.message.InstanceType
 import org.allenai.deep_qa.message.SolverServiceGrpc
 import org.allenai.deep_qa.message.QuestionRequest
 import org.allenai.deep_qa.message.QuestionResponse
+import org.allenai.deep_qa.parse.ScienceAnswer
 
 import com.mattg.util.FileUtil
 import com.typesafe.scalalogging.LazyLogging
@@ -43,9 +44,18 @@ class Client(host: String, port: Int) extends LazyLogging {
     channel.shutdown.awaitTermination(5, TimeUnit.SECONDS)
   }
 
-  def answerQuestion(instance: Instance): Seq[Double] = {
+  def answerQuestion(instance: Instance): ScienceAnswer = {
     val response = sendMessage(instanceToMessage(instance))
-    response.scores
+    instance match {
+      case i: CharacterSpanInstance => {
+        // We are answering a direct answer question.
+        ScienceAnswer(None, Some(response.answer))
+      }
+      case _ => {
+        // We are answering a multiple choice question
+        ScienceAnswer(Some(response.scores), None)
+      }
+    }
   }
 
   def instanceToMessage(instance: Instance): MessageInstance = {
@@ -115,7 +125,7 @@ object Client {
       BackgroundInstance(TrueFalseInstance("statement 4", None), Seq("background 4"))
     ), None)
 
-    val scores = client.answerQuestion(instance)
+    val scores = client.answerQuestion(instance).scores
     println(s"Scores: [${scores.mkString(" ")}]")
     client.shutdown()
   }

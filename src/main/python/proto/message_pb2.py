@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='message.proto',
   package='deep_qa',
   syntax='proto3',
-  serialized_pb=_b('\n\rmessage.proto\x12\x07\x64\x65\x65p_qa\"\xcb\x01\n\x08Instance\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.InstanceType\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x16\n\x0e\x61nswer_options\x18\x03 \x03(\t\x12/\n\x14\x62\x61\x63kground_instances\x18\x04 \x03(\x0b\x32\x11.deep_qa.Instance\x12.\n\x13\x63ontained_instances\x18\x05 \x03(\x0b\x32\x11.deep_qa.Instance\x12\x0f\n\x07passage\x18\x06 \x01(\t\"6\n\x0fQuestionRequest\x12#\n\x08question\x18\x01 \x01(\x0b\x32\x11.deep_qa.Instance\"\"\n\x10QuestionResponse\x12\x0e\n\x06scores\x18\x01 \x03(\x01*o\n\x0cInstanceType\x12\r\n\tUNDEFINED\x10\x00\x12\x0e\n\nTRUE_FALSE\x10\x01\x12\x17\n\x13MULTIPLE_TRUE_FALSE\x10\x02\x12\x13\n\x0fQUESTION_ANSWER\x10\x03\x12\x12\n\x0e\x43HARACTER_SPAN\x10\x04\x32X\n\rSolverService\x12G\n\x0e\x41nswerQuestion\x12\x18.deep_qa.QuestionRequest\x1a\x19.deep_qa.QuestionResponse\"\x00\x42\x15\n\x13org.allenai.deep_qab\x06proto3')
+  serialized_pb=_b('\n\rmessage.proto\x12\x07\x64\x65\x65p_qa\"\xcb\x01\n\x08Instance\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.InstanceType\x12\x10\n\x08question\x18\x02 \x01(\t\x12\x16\n\x0e\x61nswer_options\x18\x03 \x03(\t\x12/\n\x14\x62\x61\x63kground_instances\x18\x04 \x03(\x0b\x32\x11.deep_qa.Instance\x12.\n\x13\x63ontained_instances\x18\x05 \x03(\x0b\x32\x11.deep_qa.Instance\x12\x0f\n\x07passage\x18\x06 \x01(\t\"6\n\x0fQuestionRequest\x12#\n\x08question\x18\x01 \x01(\x0b\x32\x11.deep_qa.Instance\"W\n\x10QuestionResponse\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.deep_qa.QuestionType\x12\x0e\n\x06scores\x18\x02 \x03(\x01\x12\x0e\n\x06\x61nswer\x18\x03 \x01(\t*o\n\x0cInstanceType\x12\r\n\tUNDEFINED\x10\x00\x12\x0e\n\nTRUE_FALSE\x10\x01\x12\x17\n\x13MULTIPLE_TRUE_FALSE\x10\x02\x12\x13\n\x0fQUESTION_ANSWER\x10\x03\x12\x12\n\x0e\x43HARACTER_SPAN\x10\x04*S\n\x0cQuestionType\x12\x1b\n\x17UNDEFINED_QUESTION_TYPE\x10\x00\x12\x13\n\x0fMULTIPLE_CHOICE\x10\x01\x12\x11\n\rDIRECT_ANSWER\x10\x02\x32X\n\rSolverService\x12G\n\x0e\x41nswerQuestion\x12\x18.deep_qa.QuestionRequest\x1a\x19.deep_qa.QuestionResponse\"\x00\x42\x15\n\x13org.allenai.deep_qab\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -53,17 +53,47 @@ _INSTANCETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=324,
-  serialized_end=435,
+  serialized_start=377,
+  serialized_end=488,
 )
 _sym_db.RegisterEnumDescriptor(_INSTANCETYPE)
 
 InstanceType = enum_type_wrapper.EnumTypeWrapper(_INSTANCETYPE)
+_QUESTIONTYPE = _descriptor.EnumDescriptor(
+  name='QuestionType',
+  full_name='deep_qa.QuestionType',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UNDEFINED_QUESTION_TYPE', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='MULTIPLE_CHOICE', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DIRECT_ANSWER', index=2, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=490,
+  serialized_end=573,
+)
+_sym_db.RegisterEnumDescriptor(_QUESTIONTYPE)
+
+QuestionType = enum_type_wrapper.EnumTypeWrapper(_QUESTIONTYPE)
 UNDEFINED = 0
 TRUE_FALSE = 1
 MULTIPLE_TRUE_FALSE = 2
 QUESTION_ANSWER = 3
 CHARACTER_SPAN = 4
+UNDEFINED_QUESTION_TYPE = 0
+MULTIPLE_CHOICE = 1
+DIRECT_ANSWER = 2
 
 
 
@@ -172,9 +202,23 @@ _QUESTIONRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='scores', full_name='deep_qa.QuestionResponse.scores', index=0,
-      number=1, type=1, cpp_type=5, label=3,
+      name='type', full_name='deep_qa.QuestionResponse.type', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='scores', full_name='deep_qa.QuestionResponse.scores', index=1,
+      number=2, type=1, cpp_type=5, label=3,
       has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='answer', full_name='deep_qa.QuestionResponse.answer', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -191,17 +235,19 @@ _QUESTIONRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=288,
-  serialized_end=322,
+  serialized_end=375,
 )
 
 _INSTANCE.fields_by_name['type'].enum_type = _INSTANCETYPE
 _INSTANCE.fields_by_name['background_instances'].message_type = _INSTANCE
 _INSTANCE.fields_by_name['contained_instances'].message_type = _INSTANCE
 _QUESTIONREQUEST.fields_by_name['question'].message_type = _INSTANCE
+_QUESTIONRESPONSE.fields_by_name['type'].enum_type = _QUESTIONTYPE
 DESCRIPTOR.message_types_by_name['Instance'] = _INSTANCE
 DESCRIPTOR.message_types_by_name['QuestionRequest'] = _QUESTIONREQUEST
 DESCRIPTOR.message_types_by_name['QuestionResponse'] = _QUESTIONRESPONSE
 DESCRIPTOR.enum_types_by_name['InstanceType'] = _INSTANCETYPE
+DESCRIPTOR.enum_types_by_name['QuestionType'] = _QUESTIONTYPE
 
 Instance = _reflection.GeneratedProtocolMessageType('Instance', (_message.Message,), dict(
   DESCRIPTOR = _INSTANCE,
