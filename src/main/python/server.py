@@ -67,7 +67,7 @@ class SolverServer(message_pb2.SolverServiceServicer):
         else:
             response.type = message_pb2.DIRECT_ANSWER
             begin_span_idx, end_span_idx = scores
-            string_response = instance.passage_text[begin_span_idx, end_span_idx]
+            string_response = instance.passage_text[begin_span_idx:end_span_idx]
             response.answer = string_response
         return response
 
