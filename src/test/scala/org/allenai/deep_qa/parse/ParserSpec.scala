@@ -4,7 +4,7 @@ import org.scalatest._
 
 class StanfordParserSpec extends FlatSpecLike with Matchers {
 
-  val sentenceParses: Map[String, (Set[Dependency], Seq[Token])] = Map(
+  val sentenceParses: Map[String, (Set[Dependency], Seq[Token], Seq[SimpleToken])] = Map(
     "People eat good food." -> (
       Set(
         Dependency("eat", 2, "People", 1, "nsubj"),
@@ -18,6 +18,13 @@ class StanfordParserSpec extends FlatSpecLike with Matchers {
         Token("good", "JJ", "good", 3, Some(11)),
         Token("food", "NN", "food", 4, Some(16)),
         Token(".", ".", ".", 5, Some(20))
+      ),
+      Seq(
+        SimpleToken("People", Some(0)),
+        SimpleToken("eat", Some(7)),
+        SimpleToken("good", Some(11)),
+        SimpleToken("food", Some(16)),
+        SimpleToken(".", Some(20))
       )
     ),
     "Mary went to the store." -> (
@@ -34,9 +41,18 @@ class StanfordParserSpec extends FlatSpecLike with Matchers {
         Token("the", "DT", "the", 4, Some(13)),
         Token("store", "NN", "store", 5, Some(17)),
         Token(".", ".", ".", 6, Some(22))
+      ),
+      Seq(
+        SimpleToken("Mary", Some(0)),
+        SimpleToken("went", Some(5)),
+        SimpleToken("to", Some(10)),
+        SimpleToken("the", Some(13)),
+        SimpleToken("store", Some(17)),
+        SimpleToken(".", Some(22))
       )
     )
   )
+
 
   val parser = new StanfordParser
 
@@ -69,6 +85,12 @@ class StanfordParserSpec extends FlatSpecLike with Matchers {
   it should "print my tree" in {
     parser.parseSentence("From which part of the plant does a bee get food?").dependencyTree.get.print()
     parser.parseSentence("What is a waste product excreted by lungs?").dependencyTree.get.print()
+  }
+
+  "tokeniseSentence" should "give simple tokens with start indices" in {
+    val sentence = "People eat good food."
+    val expectedTokens = sentenceParses(sentence)._3
+    parser.tokeniseSentence(sentence).tokens should be(expectedTokens)
   }
 
   "splitSentences" should "return substrings of the original input" in {

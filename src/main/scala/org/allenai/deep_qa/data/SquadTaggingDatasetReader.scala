@@ -82,11 +82,14 @@ class SquadTaggingDatasetReader(
   }
 
   def tagPassage(passage: String, spans: Seq[(Int, String)]): PreTokenizedSequenceTaggingInstance = {
-    val parsedSentences = parser.parseSentences(passage)
+    val parsedSentences = parser.tokeniseSentences(passage)
     val allTokens = parsedSentences.flatMap(_.tokens)
+
     var remainingSpans = spans
     val finalTokens = new mutable.ArrayBuffer[String]
     val finalTags = new mutable.ArrayBuffer[String]
+
+
     for (token <- allTokens) {
       finalTokens += token.word
       val tokenSpanBegin = token.spanBegin.get

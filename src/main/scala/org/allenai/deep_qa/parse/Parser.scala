@@ -17,11 +17,13 @@ import java.util.Properties
 import scala.collection.JavaConverters._
 
 // A Parser takes sentence strings and returns parsed sentence strings.  It also can take a
-// collection of sentences and split them.  It's just a thin abstraction layer over whatever parser
-// you feel like using.
+// collection of sentences and split them into (possibly tokenised) sentences.
+//  It's just a thin abstraction layer over whatever parser you feel like using.
 trait Parser {
   def parseSentence(sentence: String): ParsedSentence
   def parseSentences(sentences: String): Seq[ParsedSentence]
+  def tokeniseSentence(sentence: String): TokenisedSentence
+  def tokeniseSentences(sentences: String): Seq[TokenisedSentence]
   def splitSentences(document: String): Seq[String]
 }
 
@@ -33,9 +35,14 @@ object Parser {
 
 // Some really simple representations, containing only what I need them to for the rest of this
 // code.
-trait ParsedSentence {
+
+trait TokenisedSentence {
+  def tokens: Seq[MinimalToken]
+}
+
+trait ParsedSentence extends TokenisedSentence {
+  override def tokens : Seq[Token]
   def dependencies: Seq[Dependency]
-  def tokens: Seq[Token]
 
   lazy private val dependencyMap =
     dependencies.map(d => (d.headIndex, d)).groupBy(_._1).mapValues(_.map(_._2).sortBy(_.depIndex))
@@ -93,6 +100,20 @@ class StanfordParser extends Parser {
     annotation.get(classOf[CoreAnnotations.SentencesAnnotation]).asScala.map(new StanfordParsedSentence(_))
   }
 
+  override def tokeniseSentence(sentence: String): TokenisedSentence = {
+    val annotation = new Annotation(sentence)
+    sentenceSplitterPipeline.annotate(annotation)
+    val tokenised = new StanfordTokenisedSentence(
+    annotation.get(classOf[CoreAnnotations.SentencesAnnotation]).get(0))
+    tokenised
+  }
+
+  override def tokeniseSentences(document: String): Seq[TokenisedSentence] = {
+    val annotation = new Annotation(document)
+    sentenceSplitterPipeline.annotate(annotation)
+    annotation.get(classOf[CoreAnnotations.SentencesAnnotation]).asScala.map( new StanfordTokenisedSentence(_))
+  }
+
   override def splitSentences(document: String): Seq[String] = {
     val annotation = new Annotation(document)
     sentenceSplitterPipeline.annotate(annotation)
@@ -105,6 +126,19 @@ class StanfordParser extends Parser {
     })
   }
 }
+
+class StanfordTokenisedSentence(sentence: CoreMap) extends TokenisedSentence {
+
+  override lazy val tokens = {
+    val _tokens = sentence.get(classOf[CoreAnnotations.TokensAnnotation])
+    _tokens.asScala.map(token => {
+      val word = token.get(classOf[CoreAnnotations.TextAnnotation])
+      val spanBegin = token.get(classOf[CoreAnnotations.CharacterOffsetBeginAnnotation])
+     SimpleToken(word, Some(spanBegin))
+    })
+  }
+}
+
 
 class StanfordParsedSentence(sentence: CoreMap) extends ParsedSentence {
   override lazy val dependencies = {

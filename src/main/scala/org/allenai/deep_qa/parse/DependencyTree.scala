@@ -2,7 +2,17 @@ package org.allenai.deep_qa.parse
 
 import scala.collection.mutable
 
-case class Token(word: String, posTag: String, lemma: String, index: Int, spanBegin: Option[Int]=None) {
+trait MinimalToken {
+  def word: String
+  def spanBegin: Option[Int]
+}
+case class SimpleToken(word: String, spanBegin: Option[Int]=None) extends MinimalToken
+case class Token(
+  word: String,
+  posTag: String, lemma: String,
+  index: Int,
+  spanBegin: Option[Int]=None
+) extends MinimalToken {
   override def toString() = s"$word ($lemma): $posTag, $index, $spanBegin"
 
   def addPreposition(prep: String): Token = {
