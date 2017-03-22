@@ -104,7 +104,7 @@ class StanfordParser extends Parser {
     val annotation = new Annotation(sentence)
     sentenceSplitterPipeline.annotate(annotation)
     val tokenised = new StanfordTokenisedSentence(
-    annotation.get(classOf[CoreAnnotations.SentencesAnnotation]).get(0))
+      annotation.get(classOf[CoreAnnotations.SentencesAnnotation]).get(0))
     tokenised
   }
 
