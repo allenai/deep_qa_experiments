@@ -16,6 +16,6 @@ ENV PYTHONPATH /deep_qa:$PYTHONPATH
 
 EXPOSE 50051
 
-COPY ./eb4b1b35/ /efs/data/dlfa/models/eb4b1b35/
+COPY ./bidaf-tf-moretrained /tmp/models/bidaf-tf-moretrained/bidaf
 
 ENTRYPOINT ["python", "src/main/python/server.py", "50051"]
