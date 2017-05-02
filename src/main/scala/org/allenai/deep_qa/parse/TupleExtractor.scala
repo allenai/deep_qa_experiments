@@ -1,7 +1,7 @@
 package org.allenai.deep_qa.parse
 
 import com.mattg.util.JsonHelper
-import edu.knowitall.openie.OpenIE
+//import edu.knowitall.openie.OpenIE
 import org.json4s._
 
 abstract class TupleExtractor(params: JValue) {
@@ -24,12 +24,13 @@ abstract class TupleExtractor(params: JValue) {
 object TupleExtractor {
   def create(params: JValue): TupleExtractor = {
     (params \ "type") match {
-      case JString("open ie") => new OpenIeExtractor(params)
+     //case JString("open ie") => new OpenIeExtractor(params)
       case _ => throw new IllegalStateException("unrecognized tuple extractor parameters")
     }
   }
 }
 
+/*
 class OpenIeExtractor(params: JValue) extends TupleExtractor(params) {
   val openIE = new OpenIE()
   override protected def extract(sentence: String): Seq[Tuple] = {
@@ -57,3 +58,4 @@ class OpenIeExtractor(params: JValue) extends TupleExtractor(params) {
     })
   }
 }
+*/

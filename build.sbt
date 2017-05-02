@@ -44,7 +44,9 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
   "ch.qos.logback" %  "logback-classic" % "1.1.7",  // backend for scala-logging
-  "org.allenai.openie" %% "openie" % "4.2.6",
+
+  // This has non-public dependencies.  Commenting out all code that uses this, for now.
+  //"org.allenai.openie" %% "openie" % "4.2.6",
 
   // These are for running this as a solver with gRPC
   "io.grpc" % "grpc-okhttp" % "0.13.2",
@@ -54,7 +56,7 @@ libraryDependencies ++= Seq(
 
 // OpenIE depends on ClearNLP 2.0.2. The version of HPPC used in this version conflicts with
 // ElasticSearch, so we need to override it with our updated private fork.
-dependencyOverrides += "com.clearnlp" % "clearnlp" % "2.0.3-allenai"
+//dependencyOverrides += "com.clearnlp" % "clearnlp" % "2.0.3-allenai"
 
 instrumentSettings
 
