@@ -66,9 +66,10 @@ class SolverServer(message_pb2.SolverServiceServicer):
                 response.scores.extend(score)
         else:
             response.type = message_pb2.DIRECT_ANSWER
-            begin_span_idx, end_span_idx = scores
-            string_response = instance.passage_text[begin_span_idx:end_span_idx]
-            response.answer = string_response
+            # begin_span_idx, end_span_idx = scores
+            # string_response = instance.passage_text[begin_span_idx:end_span_idx]
+            # response.answer = string_response
+            response.answer = scores
         return response
 
     def read_instance_message(self, instance_message):

@@ -2,7 +2,7 @@ organization := "org.allenai"
 
 name := "deep-qa"
 
-version := "0.2.5"
+version := "0.2.5-SNAPSHOT"
 
 scalaVersion := "2.11.7"
 
